@@ -1,0 +1,48 @@
+# Flutter/Dart specific files
+*.iml
+.dart_tool/
+.idea/
+.vscode/
+.packages
+.pub-cache/
+build/
+ios/Pods/
+android/.gradle/
+android/app/build/
+android/build/
+*.log
+
+# Generated files
+.dart_tool/
+*.g.dart
+*.template.dart
+*.stamp
+*.json
+
+# macOS files
+.DS_Store
+
+# Android Studio files
+*.iml
+*.ipr
+*.iws
+.idea/
+.gradle/
+/local.properties
+/.idea/caches/
+/.idea/libraries/
+/.idea/modules.xml
+/.idea/workspace.xml
+
+# iOS files
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+*.xcworkspace/
+*.xcuserstate
+!default.pbxuser
+!default.mode1v3
+!default.mode2v3
+!default.perspectivev3
