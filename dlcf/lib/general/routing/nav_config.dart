@@ -1,6 +1,6 @@
 class RouteNames {
-  static const String index = 'index';
   static const String home = 'home';
+  static const String loadingPage = 'loadingpage';
   static const String onboarding = 'onboarding';
   static const String signup = 'signup';
   static const String login = 'login';
