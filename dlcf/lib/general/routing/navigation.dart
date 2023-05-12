@@ -13,8 +13,8 @@ import 'package:dlcf/screens/home/video_page.dart';
 import 'package:dlcf/screens/login/login.dart';
 import 'package:dlcf/screens/notes/notes.dart';
 import 'package:dlcf/screens/notification/notification.dart';
-import 'package:dlcf/screens/onboarding/onbboarding.dart';
-import 'package:dlcf/screens/onboarding/onboarding1.dart';
+import 'package:dlcf/screens/onboarding/loading_page.dart';
+import 'package:dlcf/screens/onboarding/onboarding.dart';
 import 'package:dlcf/screens/otp/otp_verified.dart';
 import 'package:dlcf/screens/otp/verify_otp.dart';
 import 'package:dlcf/screens/profile/profile.dart';
@@ -29,10 +29,10 @@ class AppRouter {
     routes: [
       GoRoute(
         path: '/',
-        name: RouteNames.index,
+        name: RouteNames.loadingPage,
         pageBuilder: (context, state) {
           return const MaterialPage(
-            child: Onboarding(),
+            child: LoadingPage(),
           );
         },
         routes: [
@@ -41,7 +41,7 @@ class AppRouter {
             name: RouteNames.onboarding,
             pageBuilder: (context, state) {
               return const MaterialPage(
-                child: Onboarding1(),
+                child: Onboarding(),
               );
             },
           ),
