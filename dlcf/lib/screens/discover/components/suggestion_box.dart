@@ -39,8 +39,8 @@ class SuggestionBox extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              height: 90,
-              width: 90,
+              height: 80,
+              width: 80,
               decoration: BoxDecoration(
                 image: const DecorationImage(
                     image: AssetImage(Assets.assetsThumbnailsBibleStudy),
@@ -50,19 +50,22 @@ class SuggestionBox extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Text(preacher),
-              ],
+                  const SizedBox(height: 10),
+                  Text(preacher),
+                ],
+              ),
             ),
           ],
         ),
