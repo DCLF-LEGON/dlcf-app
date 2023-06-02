@@ -26,26 +26,30 @@ class DoctrineDetailScreen extends StatelessWidget {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'BIBLE DOCTRINE #$id: $title',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              "God's word teaches:",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              body,
-              style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-            ),
-          ],
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'BIBLE DOCTRINE #$id: $title',
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "God's word teaches:",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                body,
+                style: const TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.normal),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: CustomBottomNav(selectedTab: 4),
