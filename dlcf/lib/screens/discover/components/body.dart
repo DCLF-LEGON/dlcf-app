@@ -1,41 +1,69 @@
+import 'dart:convert';
+
+import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/api/models.dart';
 import 'package:dlcf/screens/discover/components/suggestion_box.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class DiscoverBody extends StatelessWidget {
-  const DiscoverBody({super.key});
+class DiscoverBody extends StatefulWidget {
+  const DiscoverBody({Key? key}) : super(key: key);
+
+  @override
+  State<DiscoverBody> createState() => _DiscoverBodyState();
+}
+
+class _DiscoverBodyState extends State<DiscoverBody> {
+  bool _isSearching = false;
+  bool isLoading = false;
+  String text = '';
+  var control = TextEditingController();
+  List<dynamic> messages = [];
+  List<dynamic> filteredMessages = []; // New list to store filtered messages
+
+  @override
+  void initState() {
+    super.initState();
+    _getMessages();
+  }
+
+  _getMessages() async {
+    setState(() {
+      _isSearching = true;
+      isLoading = true;
+    });
+
+    var response = await http.get(Uri.parse(EndPoints.youtubevideos));
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      setState(() {
+        messages = data['videos'];
+        isLoading = false;
+      });
+      _filterMessages(); // Filter messages initially
+    } else {
+      print('API request failed with status code: ${response.statusCode}');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  // Method to filter messages based on user input
+  void _filterMessages() {
+    setState(() {
+      filteredMessages = messages
+          .where((message) => message['title']
+              .toString()
+              .toLowerCase()
+              .contains(text.toLowerCase()))
+          .toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<Message> suggestions = [
-      Message(
-        id: 1,
-        title: "The Power of Gratitude",
-        preacher: "John Doe",
-        thumbnailUrl: "https://example.com/image1.jpg",
-        description:
-            "In this sermon, we explore the transformative power of gratitude in our lives.",
-        url: "n_FIQxyWkWc",
-      ),
-      Message(
-        id: 2,
-        title: "Overcoming Fear and Anxiety",
-        preacher: "Jane Smith",
-        thumbnailUrl: "https://example.com/image2.jpg",
-        description:
-            "Join us as we learn how to overcome fear and anxiety with faith and courage.",
-        url: "GkJz8QfCOmA",
-      ),
-      Message(
-        id: 3,
-        title: "Living a Life of Purpose",
-        preacher: "Mark Johnson",
-        thumbnailUrl: "https://example.com/image3.jpg",
-        description:
-            "Discover the keys to living a life of purpose and fulfillment in this inspiring sermon.",
-        url: "ippQJgBCXjk",
-      ),
-    ];
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: Column(
@@ -43,15 +71,15 @@ class DiscoverBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           const Text(
-            'Quick Suggestions',
+            'Quick Search',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 8),
-          const TextField(
-            decoration: InputDecoration(
+          TextField(
+            decoration: const InputDecoration(
               filled: false,
               hintText: 'Search',
               suffixIcon: Icon(Icons.search),
@@ -68,40 +96,50 @@ class DiscoverBody extends StatelessWidget {
                 color: Colors.grey,
               ),
             ),
+            onChanged: (value) {
+              setState(() {
+                text = value;
+              });
+              _filterMessages(); // Update filtered messages on user input
+            },
           ),
           const SizedBox(height: 10),
-          suggestions.isNotEmpty
-              ? ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: suggestions.length,
-                  itemBuilder: (context, index) {
-                    return SuggestionBox(
-                      title: suggestions[index].title,
-                      preacher: 'Ps. Dr. W.F. Kumuyi',
-                      thumbnailUrl: suggestions[index].thumbnailUrl,
-                      description: suggestions[index].description,
-                      url: suggestions[index].url,
-                    );
-                  },
-                )
-              : Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      SizedBox(height: 50),
-                      Icon(
-                        Icons.not_interested,
-                        size: 40,
-                        color: Colors.grey,
+          isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : filteredMessages.isNotEmpty
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: filteredMessages.length,
+                      itemBuilder: (context, index) {
+                        return SuggestionBox(
+                          title: filteredMessages[index]['title'],
+                          preacher: filteredMessages[index]['preacher'] ??
+                              'Pastor Dr. W. F. Kumuyi',
+                          thumbnailUrl: filteredMessages[index]
+                              ['thumbnail_url'],
+                          description: filteredMessages[index]['description'],
+                          url: filteredMessages[index]['video_id'],
+                        );
+                      },
+                    )
+                  : Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          SizedBox(height: 50),
+                          Icon(
+                            Icons.not_interested,
+                            size: 40,
+                            color: Colors.grey,
+                          ),
+                          Text(
+                            'No Messages Found',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'No Suggestions Found',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
         ],
       ),
     );
