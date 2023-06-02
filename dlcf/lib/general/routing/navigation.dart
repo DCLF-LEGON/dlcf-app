@@ -161,13 +161,13 @@ class AppRouter {
             },
           ),
           GoRoute(
-            path: '${RouteNames.channelmessages}:channelName/:description',
+            path: '${RouteNames.channelmessages}:channelName/:channelID',
             name: RouteNames.channelmessages,
             pageBuilder: (context, state) {
               return MaterialPage(
                 child: ChannelMessages(
                   channelName: state.params['channelName']!,
-                  description: state.params['description']!,
+                  channelID: state.params['channelID']!,
                 ),
               );
             },
