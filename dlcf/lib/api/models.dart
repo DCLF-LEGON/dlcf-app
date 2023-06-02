@@ -6,6 +6,7 @@ class YoutubeMessage {
   final String video_id;
   final String thumbnailUrl;
   final String description;
+  final String preacher;
 
   YoutubeMessage({
     required this.id,
@@ -13,6 +14,7 @@ class YoutubeMessage {
     required this.video_id,
     required this.thumbnailUrl,
     required this.description,
+    required this.preacher,
   });
 
   factory YoutubeMessage.fromMap(Map<String, dynamic> map) {
@@ -22,6 +24,7 @@ class YoutubeMessage {
       video_id: map['video_id'],
       thumbnailUrl: map['thumbnailUrl'],
       description: map['description'],
+      preacher: map['preacher'],
     );
   }
 }
