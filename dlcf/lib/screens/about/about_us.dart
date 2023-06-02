@@ -2,6 +2,7 @@ import 'package:dlcf/assets.dart';
 import 'package:dlcf/general/components/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:photo_view/photo_view.dart';
 
 class AboutUsPage extends StatelessWidget {
   const AboutUsPage({super.key});
@@ -102,8 +103,8 @@ class AboutUsPage extends StatelessWidget {
                       context,
                       'Ps. Prof. Charlse Amoatey',
                       'Campus Pastor',
-                      'Ps. Prof. Charlse Amoatey is our campus pastor. He is a very hardworking person and he is very passionate about his work.',
-                      Assets.assetsPicturesMamapeace,
+                      "Prof. Charles Amoatey has over 15 years of experience in Development Evaluation. He is currently the Director of the GIMPA Training and Consulting and Heads Development Impact West Africa Project at GIMPA. Charles holds a bachelor’s degree in Civil Engineering, a master degree in Infrastructure Planning with a specialization in Project Management, an MBA with a specialization in Finance and International Management and a Ph.D. in Development Economics. He has consulted for several local and international Development Agencies including the World Bank, ACBF, ECOWAS Commission, AUC, IFAD, UNDP, DFID, GIZ, KfW, SECO and Danida in the fields of Project Planning, Monitoring and Evaluation (M&E) and regional economic development. Charles has supported several public sector agencies and international agencies in policy development, training and setting up of Monitoring and Evaluation systems. He led the development of M&E policies for Ghana and ECOWAS and supported the Ghana M&E Ministry in the development of an ICT-based government-wide Results framework. He is Technical Advisor of the National M&E Information Systems been developed the National Development Planning Commission. Prof. Amoatey also led the preparation of a Joint UN Proposal for the Development of Northern Ghana. He is currently leading the impact evaluation of the One-Village-One-Dam initiative of the government in the five northern regions of Ghana, and also serves as the M&E consultant on the Ghana Skills and Jobs Project implemented by the Ministry of Employment and Labour Relations.",
+                      Assets.assetsPicturesPastor,
                     ),
                     const Divider(),
                     const SizedBox(height: 10),
@@ -111,7 +112,7 @@ class AboutUsPage extends StatelessWidget {
                       context,
                       'Dr. Peace Amoatey',
                       'Sister\'s Coordinator',
-                      'Dr. Peace Amoatey is our sister\'s coordinator. She is a very hardworking person and she is very passionate about her work.',
+                      "Dr Mrs Peace Amoatey is the Sisters' coordinator of the Deeper Life campus fellowship Legon. She has nurtured and impacted a lot of lives positively through her ministry. Her love, commitment for God and how she combines ministry with family and profession is overwhelming. She is married to Professor Pastor Charles Amoatey and they are blessed with three lovely children. She had her tertiary education in Civil engineering at the Kwame Nkrumah University of Science and Technology (KNUST). She holds a Master's degree in Resources Engineering(water&land) from the Karlsruhe Institute of Technology (KIT), Germany. She is also a doctoral degree(PHD) holder in Civil engineering from the University of Statgart, Germany. She is currently the a lecturer and the Head of Department at the Agricultural Engineering Department, University of Ghana.",
                       Assets.assetsPicturesMamapeace,
                     ),
                     const Divider(),
@@ -140,20 +141,15 @@ class AboutUsPage extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return Dialog(
-              child: GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: AspectRatio(
-                  aspectRatio:
-                      1, // You can adjust this value based on the image aspect ratio
-                  child: Image.asset(
-                    avatarUrl,
-                    fit: BoxFit.contain,
-                  ),
-                ),
+              child: PhotoView(
+                imageProvider: AssetImage(avatarUrl),
+                initialScale: PhotoViewComputedScale.contained,
+                minScale: PhotoViewComputedScale.contained,
+                maxScale: PhotoViewComputedScale.covered * 2.0,
+                heroAttributes: PhotoViewHeroAttributes(tag: avatarUrl),
               ),
             );
           },
-          barrierDismissible: true,
         );
       },
       child: Row(
