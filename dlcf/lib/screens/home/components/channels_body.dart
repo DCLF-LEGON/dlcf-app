@@ -59,7 +59,7 @@ class ChannelBody extends StatelessWidget {
                   GoRouter.of(context)
                       .pushNamed(RouteNames.channelmessages, params: {
                     'channelName': channels[index].name,
-                    'description': channels[index].description,
+                    'channelID': channels[index].id.toString(),
                   });
                 },
                 child: ChannelBox(

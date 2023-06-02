@@ -1,10 +1,32 @@
 import 'package:dlcf/assets.dart';
-import 'package:dlcf/general/routing/nav_config.dart';
+// import 'package:dlcf/general/routing/nav_config.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:go_router/go_router.dart';
 
-class ProfileBody extends StatelessWidget {
+class ProfileBody extends StatefulWidget {
   const ProfileBody({super.key});
+
+  @override
+  State<ProfileBody> createState() => _ProfileBodyState();
+}
+
+class _ProfileBodyState extends State<ProfileBody> {
+  String _userEmail = 'Anonymous@gmail.com';
+  String _profileImage = Assets.assetsPicturesProfile;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  getUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _userEmail = prefs.getString('userEmail')!;
+      _profileImage = prefs.getString('profileImage')!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,16 +36,16 @@ class ProfileBody extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
         child: Column(
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               backgroundColor: Colors.white,
-              backgroundImage: AssetImage(Assets.assetsPicturesProfile),
+              backgroundImage: AssetImage(_profileImage),
               radius: 60,
             ),
             const SizedBox(height: 15),
-            const Text(
-              'John Doe',
-              style: TextStyle(
-                fontSize: 30,
+            Text(
+              _userEmail,
+              style: const TextStyle(
+                fontSize: 26,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -38,7 +60,15 @@ class ProfileBody extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             const Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+              'In Christ, we are made new creations, with transformed hearts and minds, reflecting His grace and truth to the world.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              '-- Beth Moore',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
@@ -47,7 +77,14 @@ class ProfileBody extends StatelessWidget {
             const SizedBox(height: 80),
             ElevatedButton(
               onPressed: () {
-                // GoRouter.of(context).pushNamed(RouteNames.login);
+                Fluttertoast.showToast(
+                    msg: "Coming Soon!",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    textColor: Colors.white,
+                    backgroundColor: Colors.blue,
+                    fontSize: 16.0);
               },
               style: ElevatedButton.styleFrom(
                 side: const BorderSide(

@@ -1,15 +1,17 @@
 import 'package:dlcf/general/components/bottom_nav.dart';
-import 'package:dlcf/screens/home/components/channels_body.dart';
+import 'package:dlcf/general/routing/nav_config.dart';
+// import 'package:dlcf/screens/discover/components/body.dart';
+import 'package:dlcf/screens/home/components/channesMessagesBody.dart.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class ChannelMessages extends StatelessWidget {
   final String channelName;
-  final String description;
+  final String channelID;
   const ChannelMessages({
     super.key,
     required this.channelName,
-    required this.description,
+    required this.channelID,
   });
 
   @override
@@ -17,27 +19,26 @@ class ChannelMessages extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                GoRouter.of(context).pop();
-              },
-            ),
-            elevation: 0,
-            backgroundColor: Colors.blue,
-            title: Text(
-              channelName.toUpperCase(),
-              overflow: TextOverflow.ellipsis,
+        appBar: AppBar(
+          title: Text(
+            channelName,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
             ),
           ),
-          body: const ChannelBody(),
-          bottomNavigationBar: CustomBottomNav(selectedTab: 0),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {},
-            child: const Icon(Icons.add),
-          )),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              GoRouter.of(context).pushNamed(RouteNames.home);
+            },
+          ),
+          centerTitle: true,
+          elevation: 0,
+        ),
+        backgroundColor: Colors.white,
+        body: const ChannelMessagesBody(),
+        bottomNavigationBar: CustomBottomNav(selectedTab: 1),
+      ),
     );
   }
 }
