@@ -1,6 +1,6 @@
-  // ignore: constant_identifier_names
+// ignore: constant_identifier_names
 
-  // Class for all the endpoints used in the app
+// Class for all the endpoints used in the app
 class EndPoints {
   static const String BASE = 'http://165.232.71.253';
   static const String baseUrl = 'http://165.232.71.253/api/';
@@ -29,7 +29,7 @@ class EndPoints {
   static const String deleteNote = '${baseUrl}delete-note/';
   static const String makeDonation = '${baseUrl}make-donation/';
   static const String logoutall = '${baseUrl}logoutall/';
-  static const String youtubevideos = '${baseUrl}youtubevideos/';
+  static const String youtubevideos = '${baseUrl}youtube-videos/';
   static const String gallery = '${baseUrl}gallery/';
 
   static const String createUpdateMessageNote =
