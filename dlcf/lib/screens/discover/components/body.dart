@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:dlcf/api/endpoints.dart';
-import 'package:dlcf/api/models.dart';
 import 'package:dlcf/screens/discover/components/suggestion_box.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +12,6 @@ class DiscoverBody extends StatefulWidget {
 }
 
 class _DiscoverBodyState extends State<DiscoverBody> {
-  bool _isSearching = false;
   bool isLoading = false;
   String text = '';
   var control = TextEditingController();
@@ -29,7 +26,6 @@ class _DiscoverBodyState extends State<DiscoverBody> {
 
   _getMessages() async {
     setState(() {
-      _isSearching = true;
       isLoading = true;
     });
 
@@ -112,10 +108,13 @@ class _DiscoverBodyState extends State<DiscoverBody> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: filteredMessages.length,
                       itemBuilder: (context, index) {
+                        final preacher = filteredMessages[index]['preacher'];
+                        final preacherName = preacher != null
+                            ? preacher['title'] + '. ' + preacher['name']
+                            : 'Pastor Dr. W. F. Kumuyi';
                         return SuggestionBox(
                           title: filteredMessages[index]['title'],
-                          preacher: filteredMessages[index]['preacher'] ??
-                              'Pastor Dr. W. F. Kumuyi',
+                          preacher: preacherName,
                           thumbnailUrl: filteredMessages[index]
                               ['thumbnail_url'],
                           description: filteredMessages[index]['description'],

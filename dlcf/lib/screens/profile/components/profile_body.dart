@@ -13,18 +13,24 @@ class ProfileBody extends StatefulWidget {
 }
 
 class _ProfileBodyState extends State<ProfileBody> {
-  String _userEmail = 'Anonymous@gmail.com';
-  String _profileImage = Assets.assetsPicturesProfile;
+  // String _userEmail = 'Anonymous@gmail.com';
+  String _userName = 'Anonymous User';
+  final String _profileImage = Assets.assetsPicturesProfile;
+
   @override
   void initState() {
     super.initState();
+    getUserInfo();
   }
 
-  getUserInfo() async {
+  void getUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final String? email = prefs.getString("userEmail");
+    // final String? profile = prefs.getString("profileImage");
+    final String? name = prefs.getString("name");
     setState(() {
-      _userEmail = prefs.getString('userEmail')!;
-      _profileImage = prefs.getString('profileImage')!;
+      // _userEmail = email.toString();
+      _userName = name.toString();
     });
   }
 
@@ -43,7 +49,7 @@ class _ProfileBodyState extends State<ProfileBody> {
             ),
             const SizedBox(height: 15),
             Text(
-              _userEmail,
+              _userName,
               style: const TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,

@@ -10,7 +10,6 @@ import 'package:go_router/go_router.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Body extends StatefulWidget {
@@ -28,61 +27,57 @@ class _BodyState extends State<Body> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
-  Future<void> signUp() async {
-    final String name = nameController.text;
-    final String email = emailController.text;
-    final String password = passwordController.text;
-    final String confirmPassword = confirmPasswordController.text;
-
+  bool isLoading = false;
+  Future<int> signUp(name, email, password, confirmPassword) async {
     // Perform your validation checks here before making the API request
-
     final Uri signUpUrl = Uri.parse(EndPoints.signup);
+    print("Hitting the endpoint");
+    final response = await http.post(
+      signUpUrl,
+      body: json.encode({
+        'fullname': name,
+        'email': email,
+        'password': password,
+        'confirmPassword': confirmPassword,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+    print("Done hitting the endpoint");
+    print("Checking the status");
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final String token = responseData['token'];
+      final String name = responseData['user']['fullname'];
+      final String email = responseData['user']['email'];
+      final dynamic profilePic = responseData['user']['profile_pic'];
 
-    final BuildContext context =
-        this.context; // Store the context in a local variable
+      print('Signup successful. Token: $token');
 
-    try {
-      final response = await http.post(
-        signUpUrl,
-        body: json.encode({
-          'name': name,
-          'email': email,
-          'password': password,
-          'confirmPassword': confirmPassword,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        final String token = responseData['token'];
-        final String name = responseData['user']['fullname'];
-        final String email = responseData['user']['email'];
-        final String profilePic = responseData['user']['profile_pic'];
-
-        print('Signup successful. Token: $token');
-
-        // save the data using sharedpreferences
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('token', token);
-        prefs.setString('name', name);
-        prefs.setString('email', email);
-        prefs.setString('profilePic', profilePic);
-        prefs.setBool('isLoggedIn', true);
-
-        GoRouter.of(context).pushNamed(RouteNames.verifyotp);
-      } else {
-        // Signup failed, handle the error
-        print('Signup failed. Response: ${response.body}');
-        // Show an error message to the user or handle the error in another way
+      // save the data using sharedpreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('userToken', token);
+      prefs.setString('name', name);
+      prefs.setString('userEmail', email);
+      if (profilePic != null) {
+        prefs.setString('profileImage', profilePic);
       }
-    } catch (error) {
-      // Handle the error
-      print('Error occurred during signup: $error');
+      prefs.setBool('isLoggedIn', true);
+
+      // GoRouter.of(context).pushNamed(RouteNames.verifyotp);
+      return response.statusCode;
+    } else {
+      // Signup failed, handle the error
+      print('Signup failed. Response Code: ${response.statusCode}');
+      return response.statusCode;
       // Show an error message to the user or handle the error in another way
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -146,7 +141,80 @@ class _BodyState extends State<Body> {
                     const SizedBox(height: 50),
                     Center(
                       child: ElevatedButton(
-                        onPressed: signUp,
+                        onPressed: () async {
+                          print("Submit button pressed");
+                          // set the loading state to true
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          print("Getting the input values");
+                          final name = nameController.text;
+                          final email = emailController.text;
+                          final password = passwordController.text;
+                          final confirmPassword =
+                              confirmPasswordController.text;
+                          // check if none of them are empty
+                          // make sure none of the fields are empty
+                          print("Checking if any of the input is empty");
+                          if (name.isEmpty ||
+                              email.isEmpty ||
+                              password.isEmpty ||
+                              confirmPassword.isEmpty) {
+                            AlertDialog(
+                              title: const Text('Error'),
+                              content:
+                                  const Text('All Fields Must Be Entered!'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    GoRouter.of(context).pop();
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            );
+                            return;
+                          }
+
+                          // check of password and confirm password are equal
+                          print(
+                              "Checking is password and confirm password math");
+                          if (password != confirmPassword) {
+                            AlertDialog(
+                              title: const Text('Error'),
+                              content: const Text('Passwords Mismatch!'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    GoRouter.of(context).pop();
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            );
+                            return;
+                          }
+
+                          // make request
+                          print("Calling the SignUp function");
+                          int res = await signUp(
+                              name, email, password, confirmPassword);
+                          // stop loading
+                          setState(() {
+                            isLoading = false;
+                          });
+                          // navigate base on status code
+                          print("Checking request status");
+                          if (res == 201) {
+                            // ignore: use_build_context_synchronously
+                            GoRouter.of(context)
+                                .pushNamed(RouteNames.verifyotp);
+                          } else {
+                            // ignore: use_build_context_synchronously
+                            _showSignUpError(context);
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           side: BorderSide(
                             color: primaryColor,
@@ -158,15 +226,23 @@ class _BodyState extends State<Body> {
                           splashFactory: InkRipple.splashFactory,
                           animationDuration: const Duration(milliseconds: 700),
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 30,
                             vertical: 10,
                           ),
-                          child: Text(
-                            'Submit',
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          child: isLoading == true
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
+                                )
+                              : const Text(
+                                  'Submit',
+                                  style: TextStyle(fontSize: 16),
+                                ),
                         ),
                       ),
                     ),
@@ -179,185 +255,19 @@ class _BodyState extends State<Body> {
       ),
     );
   }
+
+  void _showSignUpError(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const Dialog(
+          child: SizedBox(
+            height: 300,
+            width: 300,
+            child: Center(child: Text('Could not sign up! Try Again later')),
+          ),
+        );
+      },
+    );
+  }
 }
-
-
-
-// // ignore_for_file: avoid_print
-
-// import 'package:dlcf/api/endpoints.dart';
-// import 'package:dlcf/constants/colors.dart';
-// import 'package:dlcf/general/components/password.dart';
-// import 'package:dlcf/general/components/text_input.dart';
-// import 'package:dlcf/general/routing/nav_config.dart';
-// import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
-
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
-
-// import 'package:shared_preferences/shared_preferences.dart';
-
-// class Body extends StatefulWidget {
-//   const Body({Key? key}) : super(key: key);
-
-//   @override
-//   // ignore: library_private_types_in_public_api
-//   _BodyState createState() => _BodyState();
-// }
-
-// class _BodyState extends State<Body> {
-//   final TextEditingController nameController = TextEditingController();
-//   final TextEditingController emailController = TextEditingController();
-//   final TextEditingController passwordController = TextEditingController();
-//   final TextEditingController confirmPasswordController =
-//       TextEditingController();
-
-//   Future<void> signUp() async {
-//     final String name = nameController.text;
-//     final String email = emailController.text;
-//     final String password = passwordController.text;
-//     final String confirmPassword = confirmPasswordController.text;
-
-//     // Perform your validation checks here before making the API request
-
-//     final Uri signUpUrl = Uri.parse(EndPoints.signup);
-
-//     try {
-//       final response = await http.post(
-//         signUpUrl,
-//         body: json.encode({
-//           'name': name,
-//           'email': email,
-//           'password': password,
-//           'confirmPassword': confirmPassword,
-//         }),
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//       );
-
-//       print('Response status: ${response.statusCode}');
-//       if (response.statusCode == 200) {
-//         final Map<String, dynamic> responseData = json.decode(response.body);
-//         final String token = responseData['token'];
-//         final String name = responseData['user']['fullname'];
-//         final String email = responseData['user']['email'];
-//         final String profilePic = responseData['user']['profile_pic'];
-
-//         // save the data using sharedpreferences
-//         SharedPreferences prefs = await SharedPreferences.getInstance();
-//         prefs.setString('token', token);
-//         prefs.setString('name', name);
-//         prefs.setString('email', email);
-//         prefs.setString('profilePic', profilePic);
-//         prefs.setBool('isLoggedIn', true);
-
-//         GoRouter.of(context).pushNamed(RouteNames.verifyotp);
-//       } else {
-//         // Signup failed, handle the error
-//         print('Signup failed. Response: ${response.body}');
-//         // Show an error message to the user or handle the error in another way
-//       }
-//     } catch (error) {
-//       // Handle the error
-//       print('Error occurred during signup: $error');
-//       // Show an error message to the user or handle the error in another way
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     Size screenSize = MediaQuery.of(context).size;
-
-//     return SingleChildScrollView(
-//       child: Column(
-//         children: [
-//           const Center(
-//             child: Padding(
-//               padding: EdgeInsets.symmetric(vertical: 30),
-//               child: Text(
-//                 'SIGN UP',
-//                 style: TextStyle(
-//                   fontSize: 30,
-//                   fontWeight: FontWeight.bold,
-//                   color: Colors.white,
-//                 ),
-//               ),
-//             ),
-//           ),
-//           Container(
-//             height: screenSize.height * 0.8,
-//             width: screenSize.width,
-//             decoration: const BoxDecoration(
-//               borderRadius: BorderRadius.only(
-//                 topLeft: Radius.circular(20),
-//                 topRight: Radius.circular(20),
-//               ),
-//               color: Colors.white,
-//             ),
-//             child: Center(
-//               child: Padding(
-//                 padding: const EdgeInsets.only(top: 60, left: 35, right: 35),
-//                 child: Column(
-//                   children: <Widget>[
-//                     CustomTextInput(
-//                       name: 'Name',
-//                       hintText: 'Name',
-//                       controller: nameController,
-//                     ),
-//                     const SizedBox(height: 20),
-//                     CustomTextInput(
-//                       name: 'Email',
-//                       hintText: 'Email',
-//                       controller: emailController,
-//                     ),
-//                     const SizedBox(height: 20),
-//                     CustomPasswordField(
-//                       name: 'Password',
-//                       hintText: 'Password',
-//                       controller: passwordController,
-//                     ),
-//                     const SizedBox(height: 20),
-//                     CustomPasswordField(
-//                       name: 'Confirm Password',
-//                       hintText: 'Confirm Password',
-//                       controller: confirmPasswordController,
-//                     ),
-//                     const SizedBox(height: 50),
-//                     Center(
-//                       child: ElevatedButton(
-//                         onPressed: signUp,
-//                         style: ElevatedButton.styleFrom(
-//                           side: BorderSide(
-//                             color: primaryColor,
-//                             width: 2,
-//                           ),
-//                           backgroundColor: Colors.white,
-//                           foregroundColor: primaryColor,
-//                           elevation: 0,
-//                           splashFactory: InkRipple.splashFactory,
-//                           animationDuration: const Duration(milliseconds: 700),
-//                         ),
-//                         child: const Padding(
-//                           padding: EdgeInsets.symmetric(
-//                             horizontal: 30,
-//                             vertical: 10,
-//                           ),
-//                           child: Text(
-//                             'Submit',
-//                             style: TextStyle(fontSize: 16),
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }

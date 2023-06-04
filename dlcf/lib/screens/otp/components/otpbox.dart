@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
 class OtpBox extends StatefulWidget {
-  const OtpBox({
+  final TextEditingController pinController = TextEditingController();
+
+  OtpBox({
     super.key,
-    // required this.name,
-    // required this.hintText,
+    required pinController,
   });
-  // final String name;
-  // final String hintText;
 
   @override
   State<OtpBox> createState() => _OtpBoxState();
@@ -25,11 +24,12 @@ class _OtpBoxState extends State<OtpBox> {
 
   @override
   Widget build(BuildContext context) {
-    return const TextField(
+    return TextField(
+      controller: widget.pinController,
       keyboardType: TextInputType.number,
       keyboardAppearance: Brightness.dark,
       maxLength: 1,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         constraints: BoxConstraints(
           minHeight: 60,
           minWidth: 50,

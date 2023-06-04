@@ -1,5 +1,3 @@
-// import 'package:dlcf/screens/give/components/give_alert.dart';
-// import 'package:dlcf/screens/give/components/text_input.dart';
 // ignore_for_file: avoid_print
 
 import 'package:dlcf/api/endpoints.dart';

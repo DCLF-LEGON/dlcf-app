@@ -1,10 +1,65 @@
+import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/assets.dart';
 import 'package:dlcf/general/routing/nav_config.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class DrawerBody extends StatelessWidget {
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+class DrawerBody extends StatefulWidget {
   const DrawerBody({super.key});
+
+  @override
+  State<DrawerBody> createState() => _DrawerBodyState();
+}
+
+class _DrawerBodyState extends State<DrawerBody> {
+  String _userEmail = 'anonymous@gmail.com';
+
+  Future<int> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('userToken');
+    final Uri logouturl = Uri.parse(EndPoints.logout);
+    final response = await http.post(
+      logouturl,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': "Token ${token.toString()}",
+      },
+    );
+
+    if (response.statusCode == 204) {
+      // ignore: avoid_print
+      print("Logout successful");
+      prefs.remove('userToken');
+      prefs.remove('name');
+      prefs.remove('userEmail');
+      prefs.remove('profileImage');
+      prefs.remove('isLoggedIn');
+      return response.statusCode;
+    }
+    // ignore: avoid_print
+    print("Error Occured: Status Code: ${response.statusCode}");
+    return response.statusCode;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserInfo();
+  }
+
+  void getUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final String? email = prefs.getString("userEmail");
+    // final String? profile = prefs.getString("profileImage");
+    final String? email = prefs.getString("userEmail");
+    setState(() {
+      // _userEmail = email.toString();
+      _userEmail = email.toString();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,17 +74,17 @@ class DrawerBody extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  children: const [
-                    CircleAvatar(
+                  children: [
+                    const CircleAvatar(
                       backgroundImage: AssetImage(Assets.assetsPicturesProfile),
                       radius: 20,
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Text(
-                      'John Doh',
-                      style: TextStyle(
+                      _userEmail,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 14,
                       ),
                     ),
                   ],
@@ -133,8 +188,22 @@ class DrawerBody extends StatelessWidget {
                 ),
                 const SizedBox(height: 15),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    final int res = await logout();
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    // ignore: avoid_print
+                    print("Logout successful");
+                    // ignore: use_build_context_synchronously, avoid_print
                     GoRouter.of(context).pushNamed(RouteNames.login);
+                    if (res == 204) {
+                      prefs.remove('userToken');
+                      // ignore: use_build_context_synchronously
+                      GoRouter.of(context).pushNamed(RouteNames.login);
+                    } else {
+                      // ignore: use_build_context_synchronously
+                      _showLogoutError(context);
+                    }
                   },
                   splashColor: Colors.blueGrey,
                   child: Row(
@@ -155,6 +224,21 @@ class DrawerBody extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showLogoutError(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const Dialog(
+          child: SizedBox(
+            height: 300,
+            width: 300,
+            child: Center(child: Text('Something went wrong! Try Again later')),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/constants/colors.dart';
 import 'package:dlcf/general/components/password.dart';
 import 'package:dlcf/general/components/text_input.dart';
@@ -5,8 +6,54 @@ import 'package:dlcf/general/routing/nav_config.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class Body extends StatelessWidget {
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class Body extends StatefulWidget {
   const Body({super.key});
+
+  @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  bool isLoading = false;
+
+  Future<int> login(email, password) async {
+    final Uri loginURL = Uri.parse(EndPoints.login);
+    final response = await http.post(
+      loginURL,
+      body: json.encode({
+        'username': email,
+        'password': password,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // ignore: avoid_print
+      print('Login Successful: Code: ${response.statusCode}');
+      // save the data using sharedpreferences
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final String token = responseData['token'];
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('userToken', token);
+      prefs.setBool('isLoggedIn', true);
+      return response.statusCode;
+    } else {
+      // ignore: avoid_print
+      print('Login Error: Error Code: ${response.statusCode}');
+      return response.statusCode;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +124,28 @@ class Body extends StatelessWidget {
                     const SizedBox(height: 40),
                     Center(
                       child: ElevatedButton(
-                        onPressed: () {
-                          GoRouter.of(context).pushNamed(RouteNames.home);
+                        onPressed: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          final username = emailController.text;
+                          final password = passwordController.text;
+                          // check if any of the fields are empty
+                          if (username.isEmpty || password.isEmpty) {}
+                          // hit endpoint
+                          final res = await login(username, password);
+                          // stop loading
+                          setState(() {
+                            isLoading = false;
+                          });
+                          // check response status
+                          if (res == 200) {
+                            // ignore: use_build_context_synchronously
+                            GoRouter.of(context).pushNamed(RouteNames.home);
+                          } else {
+                            // ignore: use_build_context_synchronously
+                            _showLoginError(context);
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           side: BorderSide(
@@ -92,10 +159,16 @@ class Body extends StatelessWidget {
                           animationDuration: const Duration(milliseconds: 700),
                           fixedSize: const Size(160, 40),
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 30, vertical: 10),
-                          child: Text('Login', style: TextStyle(fontSize: 16)),
+                          child: isLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator(
+                                  color: Colors.blue,
+                                ))
+                              : const Text('Login',
+                                  style: TextStyle(fontSize: 16)),
                         ),
                       ),
                     ),
@@ -127,6 +200,21 @@ class Body extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showLoginError(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const Dialog(
+          child: SizedBox(
+            height: 300,
+            width: 300,
+            child: Center(child: Text('Could not login! Try Again later')),
+          ),
+        );
+      },
     );
   }
 }
