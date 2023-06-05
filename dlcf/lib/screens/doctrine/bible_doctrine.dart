@@ -111,8 +111,7 @@ class _DoctrineScreenState extends State<DoctrineScreen> {
                                       GoRouter.of(context).pushNamed(
                                         RouteNames.doctrinedetail,
                                         params: {
-                                          'id':
-                                              doctrines[index]['id'].toString(),
+                                          'id': "${index + 1}".toString(),
                                           'title': doctrines[index]['title'],
                                           'body': doctrines[index]
                                               ['description'],

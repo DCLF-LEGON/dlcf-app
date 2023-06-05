@@ -1,5 +1,7 @@
 // ignore: constant_identifier_names
 
+// ignore_for_file: constant_identifier_names
+
 // Class for all the endpoints used in the app
 class EndPoints {
   static const String BASE = 'http://165.232.71.253';
@@ -16,6 +18,7 @@ class EndPoints {
   static const String messageDetail = '${baseUrl}message-detail/';
   static const String categoryMessages = '${baseUrl}category-messages/';
   static const String likeMessage = '${baseUrl}like-message/';
+  static const String likeVideo = '${baseUrl}like-video/';
   static const String leaders = '${baseUrl}leaders/';
   static const String preachers = '${baseUrl}preachers/';
   static const String doctrines = '${baseUrl}doctrines/';
