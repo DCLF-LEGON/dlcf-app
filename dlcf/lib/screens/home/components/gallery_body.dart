@@ -69,7 +69,6 @@ class _GalleryBodyState extends State<GalleryBody> {
     );
   }
 
-
   void _showImagePopup(BuildContext context, String image) {
     showDialog(
       context: context,

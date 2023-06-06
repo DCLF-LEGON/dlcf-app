@@ -34,6 +34,9 @@ class EndPoints {
   static const String logoutall = '${baseUrl}logoutall/';
   static const String youtubevideos = '${baseUrl}youtube-videos/';
   static const String gallery = '${baseUrl}gallery/';
+  static const String channels = '${baseUrl}categories/';
+  static const String categoryVideos = '${baseUrl}category-videos/';
+  static const String bookmarkVideo = '${baseUrl}bookmark-video/';
 
   static const String createUpdateMessageNote =
       '${baseUrl}create-update-message-note/';

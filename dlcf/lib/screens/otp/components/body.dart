@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/constants/colors.dart';
@@ -26,6 +26,7 @@ class _BodyState extends State<Body> {
 
   String userEmail = 'example@gmail.com';
   bool isLoading = false;
+  bool resendingOTP = false;
 
   Future<int> verifyOTP(String f1, String f2, String f3, String f4) async {
     final Uri verifyOTPUrl = Uri.parse(EndPoints.verifyOTP);
@@ -45,6 +46,26 @@ class _BodyState extends State<Body> {
     print(token.toString());
     if (response.statusCode == 200) {
       print("OTP verified");
+      return response.statusCode;
+    } else {
+      print("Error Occured! Code: ${response.statusCode}");
+      return response.statusCode;
+    }
+  }
+
+  Future<int> resendOTP() async {
+    final Uri resendOTPURL = Uri.parse(EndPoints.resendOTP);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString("userToken");
+    final response = await http.post(
+      resendOTPURL,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': "Token ${token.toString()}",
+      },
+    );
+    if (response.statusCode == 200) {
+      print("OTP RESENT!");
       return response.statusCode;
     } else {
       print("Error Occured! Code: ${response.statusCode}");
@@ -126,7 +147,6 @@ class _BodyState extends State<Body> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        // OtpBox(pinController: f1Controller),
                         TextField(
                           controller: f1Controller,
                           keyboardType: TextInputType.number,
@@ -154,7 +174,6 @@ class _BodyState extends State<Body> {
                           ),
                         ),
                         const SizedBox(width: 5),
-                        // OtpBox(pinController: f2Controller),
                         TextField(
                           controller: f2Controller,
                           keyboardType: TextInputType.number,
@@ -182,7 +201,6 @@ class _BodyState extends State<Body> {
                           ),
                         ),
                         const SizedBox(width: 5),
-                        // OtpBox(pinController: f3Controller),
                         TextField(
                           controller: f3Controller,
                           keyboardType: TextInputType.number,
@@ -210,7 +228,6 @@ class _BodyState extends State<Body> {
                           ),
                         ),
                         const SizedBox(width: 5),
-                        // OtpBox(pinController: f4Controller),
                         TextField(
                           controller: f4Controller,
                           keyboardType: TextInputType.number,
@@ -269,16 +286,20 @@ class _BodyState extends State<Body> {
                                 );
                                 return;
                               }
+                              setState(() {
+                                isLoading = true;
+                              });
                               // make request
                               final int res = await verifyOTP(f1, f2, f3, f4);
-
+                              setState(() {
+                                isLoading = false;
+                              });
                               if (res == 200) {
-                                // ignore: use_build_context_synchronously
                                 GoRouter.of(context)
                                     .pushNamed(RouteNames.otpverified); //noqa
                               } else {
-                                // ignore: use_build_context_synchronously
-                                _showVerifyOTPError(context);
+                                _showVerifyOTPError(
+                                    context, 'Invalid OTP. Please Try Again.');
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -290,15 +311,33 @@ class _BodyState extends State<Body> {
                                   const Duration(milliseconds: 700),
                               fixedSize: const Size(160, 40),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 30, vertical: 10),
-                              child: Text('VERIFY',
-                                  style: TextStyle(fontSize: 16)),
+                              child: isLoading
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white)
+                                  : const Text('VERIFY',
+                                      style: TextStyle(fontSize: 16)),
                             ),
                           ),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              setState(() {
+                                resendingOTP = true;
+                              });
+                              final int res = await resendOTP();
+                              setState(() {
+                                resendingOTP = false;
+                              });
+                              if (res == 200) {
+                                _showVerifyOTPError(
+                                    context, 'OTP Send Successfully!');
+                              } else {
+                                _showVerifyOTPError(context,
+                                    'Error Sending OTP. Try Again Later');
+                              }
+                            },
                             style: ElevatedButton.styleFrom(
                               side: BorderSide(
                                 color: primaryColor,
@@ -312,11 +351,14 @@ class _BodyState extends State<Body> {
                                   const Duration(milliseconds: 700),
                               fixedSize: const Size(160, 40),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 10),
-                              child: Text('RESEND CODE',
-                                  style: TextStyle(fontSize: 16)),
+                              child: resendingOTP
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.blue)
+                                  : const Text('RESEND CODE',
+                                      style: TextStyle(fontSize: 16)),
                             ),
                           ),
                         ],
@@ -332,15 +374,15 @@ class _BodyState extends State<Body> {
     );
   }
 
-  void _showVerifyOTPError(BuildContext context) {
+  void _showVerifyOTPError(BuildContext context, String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return const Dialog(
+        return Dialog(
           child: SizedBox(
             height: 300,
             width: 300,
-            child: Center(child: Text('Could not verify OTP! Try Again later')),
+            child: Center(child: Text(message)),
           ),
         );
       },

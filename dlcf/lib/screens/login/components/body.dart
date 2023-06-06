@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/constants/colors.dart';
 import 'package:dlcf/general/components/password.dart';
@@ -39,9 +41,33 @@ class _BodyState extends State<Body> {
       // save the data using sharedpreferences
       final Map<String, dynamic> responseData = json.decode(response.body);
       final String token = responseData['token'];
+      final String name = responseData['user']['fullname'];
+      final String email = responseData['user']['email'];
+      final dynamic profilePic = responseData['user']['profile_pic'];
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('userToken', token);
       prefs.setBool('isLoggedIn', true);
+      prefs.setString('name', name);
+      prefs.setString('userEmail', email);
+      if (profilePic != null) {
+        prefs.setString('profileImage', profilePic);
+      }
+      return response.statusCode;
+    } else if (response.statusCode == 403) {
+      // ignore: avoid_print
+      print('OTP NOT VERIFIED: Code: ${response.statusCode}');
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final String token = responseData['token'];
+      final String name = responseData['user']['fullname'];
+      final String email = responseData['user']['email'];
+      final dynamic profilePic = responseData['user']['profile_pic'];
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('userToken', token);
+      prefs.setString('name', name);
+      prefs.setString('userEmail', email);
+      if (profilePic != null) {
+        prefs.setString('profileImage', profilePic);
+      }
       return response.statusCode;
     } else {
       // ignore: avoid_print
@@ -140,10 +166,11 @@ class _BodyState extends State<Body> {
                           });
                           // check response status
                           if (res == 200) {
-                            // ignore: use_build_context_synchronously
                             GoRouter.of(context).pushNamed(RouteNames.home);
+                          } else if (res == 403) {
+                            GoRouter.of(context)
+                                .pushNamed(RouteNames.verifyotp);
                           } else {
-                            // ignore: use_build_context_synchronously
                             _showLoginError(context);
                           }
                         },

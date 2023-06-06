@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/screens/home/youtube_player.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,9 @@ class VideoBody extends StatefulWidget {
 }
 
 class _VideoBodyState extends State<VideoBody> {
+  bool isLiking = false;
+  bool isBookmarking = false;
+
   Future<int> likeyoutubevideo(String videoId) async {
     final Uri likeVideoURL = Uri.parse(EndPoints.likeVideo);
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -42,10 +47,34 @@ class _VideoBodyState extends State<VideoBody> {
       },
     );
     if (response.statusCode == 200) {
-      // ignore: avoid_print
       print('Video Liked Successfully. Status Code: ${response.statusCode}');
       return response.statusCode;
     } else {
+      print('ERROR OCCURED: CODE: ${response.statusCode}');
+      return response.statusCode;
+    }
+  }
+
+  Future<int> bookmarkYoutubeVideo(String videoId) async {
+    final Uri bookmarkVideoURL = Uri.parse(EndPoints.bookmarkVideo);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString("userToken");
+    final response = await http.post(
+      bookmarkVideoURL,
+      body: json.encode({
+        'video_id': videoId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': "Token ${token.toString()}",
+      },
+    );
+    if (response.statusCode == 200) {
+      print(
+          'Video BOOKMARKED Successfully. Status Code: ${response.statusCode}');
+      return response.statusCode;
+    } else {
+      print('ERROR OCCURED: CODE: ${response.statusCode}');
       return response.statusCode;
     }
   }
@@ -65,7 +94,6 @@ class _VideoBodyState extends State<VideoBody> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
           ),
-          // child: VideoPlayerWidget(videoUrl: url),
           child: MessagePlayer(vidUrl: widget.url),
         ),
         const SizedBox(height: 10),
@@ -88,19 +116,47 @@ class _VideoBodyState extends State<VideoBody> {
             Column(
               children: <Widget>[
                 InkWell(
-                  onTap: () {
-                    Fluttertoast.showToast(
-                        msg: "Bookmarked",
+                  onTap: () async {
+                    // load
+                    setState(() {
+                      isBookmarking = true;
+                    });
+                    final res = await bookmarkYoutubeVideo(widget.url);
+                    // stop loading
+                    setState(() {
+                      isBookmarking = false;
+                    });
+                    if (res == 200) {
+                      Fluttertoast.showToast(
+                        msg: "Saved!",
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.CENTER,
                         timeInSecForIosWeb: 1,
                         textColor: Colors.white,
                         backgroundColor: Colors.blue,
-                        fontSize: 16.0);
+                        fontSize: 16.0,
+                      );
+                      return;
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: "Error",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        textColor: Colors.white,
+                        backgroundColor: Colors.red,
+                        fontSize: 16.0,
+                      );
+                      return;
+                    }
                   },
-                  child: const CircleAvatar(
+                  child: CircleAvatar(
                     radius: 25,
-                    child: Icon(Icons.bookmark),
+                    child: isBookmarking
+                        ? const CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : const Icon(Icons.bookmark),
                   ),
                 ),
                 const Text('Bookmark'),
@@ -110,7 +166,13 @@ class _VideoBodyState extends State<VideoBody> {
               children: [
                 InkWell(
                   onTap: () async {
+                    setState(() {
+                      isLiking = true;
+                    });
                     final res = await likeyoutubevideo(widget.url);
+                    setState(() {
+                      isLiking = false;
+                    });
                     if (res == 200) {
                       Fluttertoast.showToast(
                         msg: "Liked",
@@ -135,9 +197,11 @@ class _VideoBodyState extends State<VideoBody> {
                       return;
                     }
                   },
-                  child: const CircleAvatar(
+                  child: CircleAvatar(
                     radius: 25,
-                    child: Icon(Icons.thumb_up),
+                    child: isLiking
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Icon(Icons.thumb_up),
                   ),
                 ),
                 const Text('Like'),

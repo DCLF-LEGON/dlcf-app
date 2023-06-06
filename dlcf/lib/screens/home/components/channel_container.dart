@@ -1,17 +1,21 @@
-// import 'package:dlcf/assets.dart';
 import 'package:flutter/material.dart';
 
 class ChannelBox extends StatelessWidget {
+  final int id;
   final String name;
   final String thumbnail;
-  const ChannelBox({super.key, required this.name, required this.thumbnail});
+  const ChannelBox({
+    super.key,
+    required this.name,
+    required this.thumbnail,
+    required this.id,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
       Container(
         height: 150,
-        width: 120,
         decoration: BoxDecoration(
           image:
               DecorationImage(image: AssetImage(thumbnail), fit: BoxFit.cover),
@@ -21,11 +25,11 @@ class ChannelBox extends StatelessWidget {
         ),
       ),
       Positioned(
-          bottom: 0,
+          bottom: 4,
           child: Center(
             child: Container(
               height: 40,
-              width: 120,
+              width: double.maxFinite,
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
               color: const Color.fromARGB(80, 0, 0, 255),
               child: Text(

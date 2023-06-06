@@ -1,7 +1,6 @@
 import 'package:dlcf/general/components/bottom_nav.dart';
 import 'package:dlcf/general/routing/nav_config.dart';
-// import 'package:dlcf/screens/discover/components/body.dart';
-import 'package:dlcf/screens/home/components/channesMessagesBody.dart.dart';
+import 'package:dlcf/screens/home/components/channelsMessagesBody.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -36,7 +35,10 @@ class ChannelMessages extends StatelessWidget {
           elevation: 0,
         ),
         backgroundColor: Colors.white,
-        body: const ChannelMessagesBody(),
+        body: ChannelMessagesBody(
+          channelID: channelID,
+          channelName: channelName,
+        ),
         bottomNavigationBar: CustomBottomNav(selectedTab: 1),
       ),
     );
