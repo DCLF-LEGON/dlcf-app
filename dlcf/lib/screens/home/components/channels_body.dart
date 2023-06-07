@@ -70,7 +70,7 @@ class _ChannelBodyState extends State<ChannelBody> {
                         GoRouter.of(context)
                             .pushNamed(RouteNames.channelmessages, params: {
                           'channelName': channels[index]['name'],
-                          'channelID': channels[index]['name'].toString(),
+                          'channelID': channels[index]['id'].toString(),
                         });
                       },
                       child: ChannelBox(

@@ -1,26 +1,17 @@
-// ignore_for_file: avoid_print
-
 import 'dart:convert';
 import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/screens/discover/components/suggestion_box.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class ChannelMessagesBody extends StatefulWidget {
-  final String channelName;
-  final String channelID;
-  const ChannelMessagesBody({
-    super.key,
-    required this.channelName,
-    required this.channelID,
-  });
+class DiscoverBody extends StatefulWidget {
+  const DiscoverBody({Key? key}) : super(key: key);
 
   @override
-  State<ChannelMessagesBody> createState() => _ChannelMessagesBodyState();
+  State<DiscoverBody> createState() => _DiscoverBodyState();
 }
 
-class _ChannelMessagesBodyState extends State<ChannelMessagesBody> {
-  // ignore: unused_field
+class _DiscoverBodyState extends State<DiscoverBody> {
   bool isLoading = false;
   String text = '';
   var control = TextEditingController();
@@ -28,9 +19,8 @@ class _ChannelMessagesBodyState extends State<ChannelMessagesBody> {
   List<dynamic> filteredMessages = []; // New list to store filtered messages
 
   @override
-  initState() {
+  void initState() {
     super.initState();
-
     _getMessages();
   }
 
@@ -38,28 +28,21 @@ class _ChannelMessagesBodyState extends State<ChannelMessagesBody> {
     setState(() {
       isLoading = true;
     });
-    print("Category ID: ${widget.channelID}");
 
-    final Uri url = Uri.parse(EndPoints.categoryVideos);
-    var response = await http.post(
-      url,
-      body: json.encode({
-        'category_id': int.parse(widget.channelID),
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
-    setState(() {
-      isLoading = false;
-    });
+    var response = await http.get(Uri.parse(EndPoints.youtubevideos));
+
     if (response.statusCode == 200) {
+      var data = json.decode(response.body);
       setState(() {
-        messages = json.decode(response.body)['messages'];
+        messages = data['videos'];
+        isLoading = false;
       });
-      _filterMessages(); // inital filtering
+      _filterMessages(); // Filter messages initially
     } else {
-      print("ERROR FETCHING CATEGORY MESSAGES: CODE: ${response.statusCode}");
+      print('API request failed with status code: ${response.statusCode}');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
