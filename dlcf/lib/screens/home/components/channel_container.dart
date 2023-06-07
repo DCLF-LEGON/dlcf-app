@@ -17,8 +17,8 @@ class ChannelBox extends StatelessWidget {
       Container(
         height: 150,
         decoration: BoxDecoration(
-          image:
-              DecorationImage(image: AssetImage(thumbnail), fit: BoxFit.cover),
+          image: DecorationImage(
+              image: NetworkImage(thumbnail), fit: BoxFit.cover),
           color: Colors.blue,
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(5), topRight: Radius.circular(5)),
