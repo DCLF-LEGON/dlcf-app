@@ -7,34 +7,34 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dlcf/api/endpoints.dart';
 
-class DoctrineScreen extends StatefulWidget {
-  const DoctrineScreen({Key? key}) : super(key: key);
+class ChurchDocumentScreen extends StatefulWidget {
+  const ChurchDocumentScreen({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _DoctrineScreenState createState() => _DoctrineScreenState();
+  _ChurchDocumentScreenState createState() => _ChurchDocumentScreenState();
 }
 
-class _DoctrineScreenState extends State<DoctrineScreen> {
-  List<dynamic> doctrines = [];
+class _ChurchDocumentScreenState extends State<ChurchDocumentScreen> {
+  List<dynamic> documents = [];
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    fetchDoctrines();
+    fetchChurchDocuments();
   }
 
-  fetchDoctrines() async {
+  fetchChurchDocuments() async {
     setState(() {
       isLoading = true;
     });
 
-    var response = await http.get(Uri.parse(EndPoints.doctrines));
+    var response = await http.get(Uri.parse(EndPoints.churchDocuments));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       setState(() {
-        doctrines = data['doctrines'];
+        documents = data['documents'];
         isLoading = false;
       });
     }
@@ -44,19 +44,18 @@ class _DoctrineScreenState extends State<DoctrineScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Doctrines'),
+        title: const Text('Church Documents'),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // GoRouter.of(context).pushNamed(RouteNames.home);
             GoRouter.of(context).pop();
           },
         ),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : doctrines.isNotEmpty
+          : documents.isNotEmpty
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -64,7 +63,7 @@ class _DoctrineScreenState extends State<DoctrineScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: Text(
-                        'Explore the foundational teachings of our faith on our Doctrine page.',
+                        'Stir up your Spirit with these spiritual documents.',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
@@ -72,7 +71,7 @@ class _DoctrineScreenState extends State<DoctrineScreen> {
                     Expanded(
                       child: AnimationLimiter(
                         child: ListView.builder(
-                          itemCount: doctrines.length,
+                          itemCount: documents.length,
                           itemBuilder: (BuildContext context, int index) {
                             return AnimationConfiguration.staggeredList(
                               position: index,
@@ -85,10 +84,11 @@ class _DoctrineScreenState extends State<DoctrineScreen> {
                                       GoRouter.of(context).pushNamed(
                                         RouteNames.doctrinedetail,
                                         params: {
-                                          'id': "${index + 1}".toString(),
-                                          'title': doctrines[index]['title'],
-                                          'body': doctrines[index]
-                                              ['description'],
+                                          'id':
+                                              documents[index]['id'].toString(),
+                                          'title': documents[index]['title'],
+                                          'document': documents[index]
+                                              ['document'],
                                         },
                                       );
                                     },
@@ -98,13 +98,13 @@ class _DoctrineScreenState extends State<DoctrineScreen> {
                                       child: ListTile(
                                         textColor: Colors.white,
                                         title: Text(
-                                          "#${index + 1}. ${doctrines[index]['title']}",
+                                          "${documents[index]['title']}",
                                           style: const TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        subtitle: Text(
-                                          '${doctrines[index]['description'].toString().substring(23, 71)}...',
+                                        subtitle: const Text(
+                                          'Click to read document',
                                         ),
                                       ),
                                     ),
@@ -129,7 +129,7 @@ class _DoctrineScreenState extends State<DoctrineScreen> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        'No Doctrines',
+                        'No Documents',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

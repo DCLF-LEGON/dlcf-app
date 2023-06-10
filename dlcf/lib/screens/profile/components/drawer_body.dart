@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/assets.dart';
 import 'package:dlcf/general/routing/nav_config.dart';
@@ -124,6 +126,22 @@ class _DrawerBodyState extends State<DrawerBody> {
                 const SizedBox(height: 15),
                 Row(
                   children: [
+                    const Icon(Icons.file_present_outlined, color: Colors.blue),
+                    const SizedBox(width: 10),
+                    InkWell(
+                      onTap: () {
+                        GoRouter.of(context).pushNamed(RouteNames.doctrine);
+                      },
+                      child: const Text(
+                        'Church Documents',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  children: [
                     const Icon(Icons.info_outline, color: Colors.blue),
                     const SizedBox(width: 10),
                     InkWell(
@@ -192,16 +210,11 @@ class _DrawerBodyState extends State<DrawerBody> {
                     final int res = await logout();
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
-                    // ignore: avoid_print
-                    print("Logout successful");
-                    // ignore: use_build_context_synchronously, avoid_print
                     GoRouter.of(context).pushNamed(RouteNames.login);
                     if (res == 204) {
                       prefs.remove('userToken');
-                      // ignore: use_build_context_synchronously
                       GoRouter.of(context).pushNamed(RouteNames.login);
                     } else {
-                      // ignore: use_build_context_synchronously
                       _showLogoutError(context);
                     }
                   },

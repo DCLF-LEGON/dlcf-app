@@ -21,6 +21,9 @@ class RouteNames {
   static const String aboutus = 'aboutus';
   static const String doctrine = 'doctrine';
   static const String doctrinedetail = 'doctrinedetail';
+  static const String gallerycategoryimages = 'gallerycategoryimages';
+  static const String churchdocuments = 'churchdocuments';
+  static const String readdocument = 'readdocument';
 }
 
 class Networks {

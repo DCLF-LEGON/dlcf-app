@@ -1,6 +1,7 @@
 import 'package:dlcf/general/components/bottom_nav.dart';
 import 'package:dlcf/screens/home/components/channels_body.dart';
-import 'package:dlcf/screens/home/components/gallery_body.dart';
+import 'package:dlcf/screens/home/components/gallery_category_images.dart';
+import 'package:dlcf/screens/home/components/gallery_category.dart';
 import 'package:dlcf/screens/home/components/sermon_body.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +43,8 @@ class HomeScreen extends StatelessWidget {
             children: [
               SermonBody(),
               ChannelBody(),
-              GalleryBody(),
+              GalleryCategoryBody(),
+              // GalleryBody(),
             ],
           ),
           bottomNavigationBar: CustomBottomNav(selectedTab: 0),

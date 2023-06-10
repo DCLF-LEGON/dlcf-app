@@ -3,10 +3,12 @@ import 'package:dlcf/screens/about/about_us.dart';
 import 'package:dlcf/screens/discover/discover.dart';
 import 'package:dlcf/screens/doctrine/bible_doctrine.dart';
 import 'package:dlcf/screens/doctrine/doctrine_detail.dart';
+import 'package:dlcf/screens/documents/church_documents.dart';
 import 'package:dlcf/screens/give/give_card.dart';
 import 'package:dlcf/screens/give/give_momo.dart';
 import 'package:dlcf/screens/give/success.dart';
 import 'package:dlcf/screens/home/channel_messages.dart';
+import 'package:dlcf/screens/home/components/gallery_category_images.dart';
 import 'package:dlcf/screens/home/home.dart';
 import 'package:dlcf/screens/error/error.dart';
 import 'package:dlcf/screens/home/video_page.dart';
@@ -69,6 +71,27 @@ class AppRouter {
             pageBuilder: (context, state) {
               return const MaterialPage(
                 child: HomeScreen(),
+              );
+            },
+          ),
+          GoRoute(
+            path: '${RouteNames.gallerycategoryimages}:id/:name',
+            name: RouteNames.gallerycategoryimages,
+            pageBuilder: (context, state) {
+              return MaterialPage(
+                child: GalleryCategoryImagesScreen(
+                  categoryId: state.params['id']!,
+                  categoryName: state.params['name']!,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            path: RouteNames.churchdocuments,
+            name: RouteNames.churchdocuments,
+            pageBuilder: (context, state) {
+              return const MaterialPage(
+                child: ChurchDocumentScreen(),
               );
             },
           ),

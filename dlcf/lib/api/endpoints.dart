@@ -38,6 +38,14 @@ class EndPoints {
   static const String categoryVideos = '${baseUrl}category-videos/';
   static const String bookmarkVideo = '${baseUrl}bookmark-video/';
 
+  static const String churchDocuments = '${baseUrl}church-document/';
+  static const String churchDocumentDetails =
+      '${baseUrl}church-document-details/';
+
+  static const String galleryCategory = '${baseUrl}gallery-category/';
+  static const String galleryCategoryImages =
+      '${baseUrl}gallery-category-images/';
+
   static const String createUpdateMessageNote =
       '${baseUrl}create-update-message-note/';
 }

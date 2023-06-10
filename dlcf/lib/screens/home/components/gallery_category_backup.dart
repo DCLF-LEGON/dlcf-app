@@ -7,34 +7,34 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dlcf/api/endpoints.dart';
 
-class DoctrineScreen extends StatefulWidget {
-  const DoctrineScreen({Key? key}) : super(key: key);
+class GalleryCategoryScreen extends StatefulWidget {
+  const GalleryCategoryScreen({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _DoctrineScreenState createState() => _DoctrineScreenState();
+  _GalleryCategoryScreenState createState() => _GalleryCategoryScreenState();
 }
 
-class _DoctrineScreenState extends State<DoctrineScreen> {
+class _GalleryCategoryScreenState extends State<GalleryCategoryScreen> {
   List<dynamic> doctrines = [];
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    fetchDoctrines();
+    fetchGalleryCategories();
   }
 
-  fetchDoctrines() async {
+  fetchGalleryCategories() async {
     setState(() {
       isLoading = true;
     });
 
-    var response = await http.get(Uri.parse(EndPoints.doctrines));
+    var response = await http.get(Uri.parse(EndPoints.galleryCategory));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       setState(() {
-        doctrines = data['doctrines'];
+        doctrines = data['categories'];
         isLoading = false;
       });
     }
@@ -44,12 +44,11 @@ class _DoctrineScreenState extends State<DoctrineScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Doctrines'),
+        title: const Text('Gallery Categories'),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // GoRouter.of(context).pushNamed(RouteNames.home);
             GoRouter.of(context).pop();
           },
         ),
@@ -64,7 +63,7 @@ class _DoctrineScreenState extends State<DoctrineScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: Text(
-                        'Explore the foundational teachings of our faith on our Doctrine page.',
+                        'Explore the beautiful gallery of our campus fellowship.',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
@@ -87,8 +86,6 @@ class _DoctrineScreenState extends State<DoctrineScreen> {
                                         params: {
                                           'id': "${index + 1}".toString(),
                                           'title': doctrines[index]['title'],
-                                          'body': doctrines[index]
-                                              ['description'],
                                         },
                                       );
                                     },
