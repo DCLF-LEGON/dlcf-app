@@ -98,12 +98,17 @@ class _DrawerBodyState extends State<DrawerBody> {
                 ),
                 const SizedBox(height: 20),
                 Row(
-                  children: const [
-                    Icon(Icons.mail, color: Colors.blue),
-                    SizedBox(width: 10),
-                    Text(
-                      'Saved Messages',
-                      style: TextStyle(color: Colors.blue),
+                  children: [
+                    const Icon(Icons.mail, color: Colors.blue),
+                    const SizedBox(width: 10),
+                    InkWell(
+                      onTap: () {
+                        GoRouter.of(context).pushNamed(RouteNames.bookmarks);
+                      },
+                      child: const Text(
+                        'Saved Messages',
+                        style: TextStyle(color: Colors.blue),
+                      ),
                     ),
                   ],
                 ),
@@ -130,7 +135,8 @@ class _DrawerBodyState extends State<DrawerBody> {
                     const SizedBox(width: 10),
                     InkWell(
                       onTap: () {
-                        GoRouter.of(context).pushNamed(RouteNames.doctrine);
+                        GoRouter.of(context)
+                            .pushNamed(RouteNames.churchdocuments);
                       },
                       child: const Text(
                         'Church Documents',
@@ -172,12 +178,11 @@ class _DrawerBodyState extends State<DrawerBody> {
                     animationDuration: const Duration(milliseconds: 700),
                     fixedSize: const Size(150, 40),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text('Give', style: TextStyle(fontSize: 16)),
                         SizedBox(width: 5),
                         Icon(Icons.attach_money_sharp),
@@ -194,8 +199,8 @@ class _DrawerBodyState extends State<DrawerBody> {
                   height: 2,
                 ),
                 const SizedBox(height: 15),
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Icon(Icons.settings, color: Colors.blue),
                     SizedBox(width: 10),
                     Text(
@@ -219,8 +224,8 @@ class _DrawerBodyState extends State<DrawerBody> {
                     }
                   },
                   splashColor: Colors.blueGrey,
-                  child: Row(
-                    children: const [
+                  child: const Row(
+                    children: [
                       Icon(Icons.power_settings_new_outlined,
                           color: Colors.blue),
                       SizedBox(width: 10),

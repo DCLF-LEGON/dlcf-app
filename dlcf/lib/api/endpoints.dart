@@ -1,5 +1,3 @@
-// ignore: constant_identifier_names
-
 // ignore_for_file: constant_identifier_names
 
 // Class for all the endpoints used in the app
@@ -37,8 +35,10 @@ class EndPoints {
   static const String channels = '${baseUrl}categories/';
   static const String categoryVideos = '${baseUrl}category-videos/';
   static const String bookmarkVideo = '${baseUrl}bookmark-video/';
+  static const String bookmarkedYoutubeVideos =
+      '${baseUrl}bookmarked-youtube-videos/';
 
-  static const String churchDocuments = '${baseUrl}church-document/';
+  static const String churchDocuments = '${baseUrl}church-documents/';
   static const String churchDocumentDetails =
       '${baseUrl}church-document-details/';
 

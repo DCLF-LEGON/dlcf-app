@@ -3,7 +3,6 @@
 import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/constants/colors.dart';
 import 'package:dlcf/general/routing/nav_config.dart';
-import 'package:dlcf/screens/otp/components/otpbox.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';

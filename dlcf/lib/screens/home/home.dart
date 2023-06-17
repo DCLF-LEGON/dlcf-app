@@ -1,7 +1,7 @@
 import 'package:dlcf/general/components/bottom_nav.dart';
 import 'package:dlcf/screens/home/components/channels_body.dart';
-import 'package:dlcf/screens/home/components/gallery_category_images.dart';
 import 'package:dlcf/screens/home/components/gallery_category.dart';
+import 'package:dlcf/screens/home/components/live_stream.dart';
 import 'package:dlcf/screens/home/components/sermon_body.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       home: DefaultTabController(
-        length: 3,
+        length: 4,
         child: Scaffold(
           appBar: AppBar(
             title: const Text(
@@ -31,10 +31,12 @@ class HomeScreen extends StatelessWidget {
               unselectedLabelColor: Colors.black,
               labelColor: Colors.blue,
               indicatorColor: Colors.blue,
+              isScrollable: true,
               tabs: [
                 Tab(text: 'SERMONS'),
                 Tab(text: 'CHANNELS'),
                 Tab(text: 'GALLERY'),
+                Tab(text: 'LIVE'),
               ],
             ),
           ),
@@ -44,7 +46,7 @@ class HomeScreen extends StatelessWidget {
               SermonBody(),
               ChannelBody(),
               GalleryCategoryBody(),
-              // GalleryBody(),
+              LiveStreamBody(),
             ],
           ),
           bottomNavigationBar: CustomBottomNav(selectedTab: 0),

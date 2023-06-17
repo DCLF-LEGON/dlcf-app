@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dlcf/general/components/bottom_nav.dart';
 import 'package:dlcf/general/routing/nav_config.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dlcf/api/endpoints.dart';
+import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 
 class ChurchDocumentScreen extends StatefulWidget {
   const ChurchDocumentScreen({Key? key}) : super(key: key);
@@ -37,6 +40,11 @@ class _ChurchDocumentScreenState extends State<ChurchDocumentScreen> {
         documents = data['documents'];
         isLoading = false;
       });
+    } else {
+      print("ERROR OCCURED: CODE: ${response.statusCode}");
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -63,7 +71,7 @@ class _ChurchDocumentScreenState extends State<ChurchDocumentScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: Text(
-                        'Stir up your Spirit with these spiritual documents.',
+                        'Stir up Your Spirit with these Spiritual Documents.',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
@@ -82,13 +90,13 @@ class _ChurchDocumentScreenState extends State<ChurchDocumentScreen> {
                                   child: InkWell(
                                     onTap: () {
                                       GoRouter.of(context).pushNamed(
-                                        RouteNames.doctrinedetail,
+                                        RouteNames.readdocument,
                                         params: {
                                           'id':
                                               documents[index]['id'].toString(),
                                           'title': documents[index]['title'],
-                                          'document': documents[index]
-                                              ['document'],
+                                          'document': EndPoints.BASE +
+                                              documents[index]['document'],
                                         },
                                       );
                                     },
@@ -97,6 +105,10 @@ class _ChurchDocumentScreenState extends State<ChurchDocumentScreen> {
                                       elevation: 0,
                                       child: ListTile(
                                         textColor: Colors.white,
+                                        leading: const Icon(
+                                          Icons.menu_book_outlined,
+                                          size: 36,
+                                        ),
                                         title: Text(
                                           "${documents[index]['title']}",
                                           style: const TextStyle(
@@ -104,7 +116,35 @@ class _ChurchDocumentScreenState extends State<ChurchDocumentScreen> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         subtitle: const Text(
-                                          'Click to read document',
+                                          'Click To Read Document',
+                                        ),
+                                        trailing: InkWell(
+                                          child: const Icon(
+                                            Icons.cloud_download,
+                                            size: 36,
+                                          ),
+                                          onTap: () {
+                                            FileDownloader.downloadFile(
+                                                url: EndPoints.BASE +
+                                                    documents[index]
+                                                        ['document'],
+                                                name: documents[index]['title'],
+                                                onProgress:
+                                                    (fileName, progress) {
+                                                  print(
+                                                      'FILE fileName HAS PROGRESS $progress');
+                                                },
+                                                onDownloadCompleted:
+                                                    (String path) {
+                                                  print(
+                                                      'FILE DOWNLOADED TO PATH: $path');
+                                                },
+                                                onDownloadError:
+                                                    (String error) {
+                                                  print(
+                                                      'DOWNLOAD ERROR: $error');
+                                                });
+                                          },
                                         ),
                                       ),
                                     ),
@@ -118,10 +158,10 @@ class _ChurchDocumentScreenState extends State<ChurchDocumentScreen> {
                     ),
                   ],
                 )
-              : Center(
+              : const Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const <Widget>[
+                    children: <Widget>[
                       Icon(
                         Icons.notifications_off,
                         size: 72,

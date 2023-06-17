@@ -1,17 +1,20 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:dlcf/api/endpoints.dart';
-import 'package:dlcf/screens/discover/components/suggestion_box.dart';
+import 'package:dlcf/screens/bookmarks/components/suggestion_box.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-class DiscoverBody extends StatefulWidget {
-  const DiscoverBody({Key? key}) : super(key: key);
+class BookmarkBody extends StatefulWidget {
+  const BookmarkBody({Key? key}) : super(key: key);
 
   @override
-  State<DiscoverBody> createState() => _DiscoverBodyState();
+  State<BookmarkBody> createState() => _BookmarkBodyState();
 }
 
-class _DiscoverBodyState extends State<DiscoverBody> {
+class _BookmarkBodyState extends State<BookmarkBody> {
   bool isLoading = false;
   String text = '';
   var control = TextEditingController();
@@ -29,7 +32,16 @@ class _DiscoverBodyState extends State<DiscoverBody> {
       isLoading = true;
     });
 
-    var response = await http.get(Uri.parse(EndPoints.youtubevideos));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString("userToken");
+
+    var response = await http.get(
+      Uri.parse(EndPoints.bookmarkedYoutubeVideos),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': "Token ${token.toString()}",
+      },
+    );
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
@@ -40,6 +52,7 @@ class _DiscoverBodyState extends State<DiscoverBody> {
       _filterMessages(); // Filter messages initially
     } else {
       print('API request failed with status code: ${response.statusCode}');
+      print(response.reasonPhrase);
       setState(() {
         isLoading = false;
       });
@@ -50,7 +63,7 @@ class _DiscoverBodyState extends State<DiscoverBody> {
   void _filterMessages() {
     setState(() {
       filteredMessages = messages
-          .where((message) => message['title']
+          .where((message) => message['video']['title']
               .toString()
               .toLowerCase()
               .contains(text.toLowerCase()))
@@ -67,7 +80,7 @@ class _DiscoverBodyState extends State<DiscoverBody> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           const Text(
-            'Quick Search',
+            'Search Bookmarks',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -108,24 +121,28 @@ class _DiscoverBodyState extends State<DiscoverBody> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: filteredMessages.length,
                       itemBuilder: (context, index) {
-                        final preacher = filteredMessages[index]['preacher'];
+                        final preacher =
+                            filteredMessages[index]['video']['preacher'];
                         final preacherName = preacher != null
-                            ? preacher['title'] + '. ' + preacher['name']
+                            ? preacher['video']['title'] +
+                                '. ' +
+                                preacher['name']
                             : 'Pastor Dr. W. F. Kumuyi';
                         return SuggestionBox(
-                          title: filteredMessages[index]['title'],
+                          title: filteredMessages[index]['video']['title'],
                           preacher: preacherName,
-                          thumbnailUrl: filteredMessages[index]
+                          thumbnailUrl: filteredMessages[index]['video']
                               ['thumbnail_url'],
-                          description: filteredMessages[index]['description'],
-                          url: filteredMessages[index]['video_id'],
+                          description: filteredMessages[index]['video']
+                              ['description'],
+                          url: filteredMessages[index]['video']['video_id'],
                         );
                       },
                     )
-                  : Center(
+                  : const Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           SizedBox(height: 50),
                           Icon(
                             Icons.not_interested,

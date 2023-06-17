@@ -1,9 +1,11 @@
 import 'package:dlcf/general/routing/nav_config.dart';
 import 'package:dlcf/screens/about/about_us.dart';
+import 'package:dlcf/screens/bookmarks/bookmarks.dart';
 import 'package:dlcf/screens/discover/discover.dart';
 import 'package:dlcf/screens/doctrine/bible_doctrine.dart';
 import 'package:dlcf/screens/doctrine/doctrine_detail.dart';
 import 'package:dlcf/screens/documents/church_documents.dart';
+import 'package:dlcf/screens/documents/document_detail.dart';
 import 'package:dlcf/screens/give/give_card.dart';
 import 'package:dlcf/screens/give/give_momo.dart';
 import 'package:dlcf/screens/give/success.dart';
@@ -96,6 +98,19 @@ class AppRouter {
             },
           ),
           GoRoute(
+            path: '${RouteNames.readdocument}:id/:title/:document',
+            name: RouteNames.readdocument,
+            pageBuilder: (context, state) {
+              return MaterialPage(
+                child: DocumentDetailScreen(
+                  id: state.params['id']!,
+                  document: state.params['document']!,
+                  title: state.params['title']!,
+                ),
+              );
+            },
+          ),
+          GoRoute(
             path: RouteNames.verifyotp,
             name: RouteNames.verifyotp,
             pageBuilder: (context, state) {
@@ -137,6 +152,15 @@ class AppRouter {
             pageBuilder: (context, state) {
               return const MaterialPage(
                 child: Discover(),
+              );
+            },
+          ),
+          GoRoute(
+            path: RouteNames.bookmarks,
+            name: RouteNames.bookmarks,
+            pageBuilder: (context, state) {
+              return const MaterialPage(
+                child: BookmarksScreen(),
               );
             },
           ),

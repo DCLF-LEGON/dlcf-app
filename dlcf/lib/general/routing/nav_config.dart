@@ -24,6 +24,7 @@ class RouteNames {
   static const String gallerycategoryimages = 'gallerycategoryimages';
   static const String churchdocuments = 'churchdocuments';
   static const String readdocument = 'readdocument';
+  static const String bookmarks = 'bookmarks';
 }
 
 class Networks {

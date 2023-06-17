@@ -1,11 +1,11 @@
 import 'package:dlcf/general/components/bottom_nav.dart';
 import 'package:dlcf/general/routing/nav_config.dart';
-import 'package:dlcf/screens/discover/components/body.dart';
+import 'package:dlcf/screens/bookmarks/components/body.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class Discover extends StatelessWidget {
-  const Discover({super.key});
+class BookmarksScreen extends StatelessWidget {
+  const BookmarksScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class Discover extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'DISCOVER',
+            'Bookmarks',
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
@@ -29,7 +29,7 @@ class Discover extends StatelessWidget {
           elevation: 0,
         ),
         backgroundColor: Colors.white,
-        body: const DiscoverBody(),
+        body: const BookmarkBody(),
         bottomNavigationBar: CustomBottomNav(selectedTab: 1),
       ),
     );

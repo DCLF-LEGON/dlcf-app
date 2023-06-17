@@ -1,9 +1,7 @@
 import 'package:dlcf/assets.dart';
-// import 'package:dlcf/general/routing/nav_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:go_router/go_router.dart';
 
 class ProfileBody extends StatefulWidget {
   const ProfileBody({super.key});
@@ -13,7 +11,6 @@ class ProfileBody extends StatefulWidget {
 }
 
 class _ProfileBodyState extends State<ProfileBody> {
-  // String _userEmail = 'Anonymous@gmail.com';
   String _userName = 'Anonymous User';
   final String _profileImage = Assets.assetsPicturesProfile;
 
@@ -25,11 +22,8 @@ class _ProfileBodyState extends State<ProfileBody> {
 
   void getUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // final String? email = prefs.getString("userEmail");
-    // final String? profile = prefs.getString("profileImage");
     final String? name = prefs.getString("name");
     setState(() {
-      // _userEmail = email.toString();
       _userName = name.toString();
     });
   }
@@ -64,10 +58,14 @@ class _ProfileBodyState extends State<ProfileBody> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const Divider(
+              height: 1.0,
+              color: Colors.black,
+            ),
             const SizedBox(height: 10),
             const Text(
               'In Christ, we are made new creations, with transformed hearts and minds, reflecting His grace and truth to the world.',
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.start,
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -75,12 +73,57 @@ class _ProfileBodyState extends State<ProfileBody> {
             const SizedBox(height: 8),
             const Text(
               '-- Beth Moore',
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.justify,
               style: TextStyle(
                 fontSize: 14,
               ),
             ),
-            const SizedBox(height: 80),
+            const Divider(
+              height: 1.0,
+              color: Colors.black,
+            ),
+            const SizedBox(height: 40),
+            const Text(
+              'Member',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Divider(
+              height: 1.0,
+              color: Colors.black,
+            ),
+            const SizedBox(height: 15),
+            const Row(
+              children: [
+                Text(
+                  'Membership Form',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                Spacer(),
+                Text(
+                  'Not Completed',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.red,
+                  ),
+                ),
+              ],
+            ),
+            const Divider(
+              height: 1.0,
+              color: Colors.black,
+            ),
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: () {},
+              child: const Text('Click To Fill Form'),
+            ),
+            const SizedBox(height: 60),
             ElevatedButton(
               onPressed: () {
                 Fluttertoast.showToast(
