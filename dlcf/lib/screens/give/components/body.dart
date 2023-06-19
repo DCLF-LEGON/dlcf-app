@@ -2,6 +2,7 @@ import 'package:dlcf/general/routing/nav_config.dart';
 import 'package:dlcf/screens/give/components/give_alert.dart';
 import 'package:dlcf/screens/give/components/text_input.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
 class GiveBody extends StatelessWidget {
@@ -48,9 +49,9 @@ class GiveBody extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const <Widget>[
+              children: <Widget>[
                 CustomGiveTextInput(
                     hintText: 'MM/YY', name: 'MM/YY', height: 60, width: 90),
                 // SizedBox(width: 20),
@@ -64,7 +65,17 @@ class GiveBody extends StatelessWidget {
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
-                GoRouter.of(context).pushNamed(RouteNames.givesuccess);
+                // GoRouter.of(context).pushNamed(RouteNames.givesuccess);
+                Fluttertoast.showToast(
+                  msg: "Coming Soon!",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  textColor: Colors.white,
+                  backgroundColor: Colors.blue,
+                  fontSize: 16.0,
+                );
+                return;
               },
               style: ElevatedButton.styleFrom(
                 side: const BorderSide(

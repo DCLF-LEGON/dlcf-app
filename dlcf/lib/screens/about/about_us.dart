@@ -152,32 +152,36 @@ class AboutUsPage extends StatelessWidget {
           },
         );
       },
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          CircleAvatar(
-            backgroundImage: AssetImage(avatarUrl),
-            radius: 30,
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              CircleAvatar(
+                backgroundImage: AssetImage(avatarUrl),
+                radius: 30,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      title,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 5),
-                Text(
-                  title,
-                  style: const TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(height: 10),
-                Text(bio),
-              ],
-            ),
+              ),
+            ],
           ),
+          const SizedBox(height: 10),
+          Text(bio),
         ],
       ),
     );

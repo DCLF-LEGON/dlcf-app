@@ -148,6 +148,22 @@ class _DrawerBodyState extends State<DrawerBody> {
                 const SizedBox(height: 15),
                 Row(
                   children: [
+                    const Icon(Icons.person_pin, color: Colors.blue),
+                    const SizedBox(width: 10),
+                    InkWell(
+                      onTap: () {
+                        GoRouter.of(context).pushNamed(RouteNames.leaders);
+                      },
+                      child: const Text(
+                        'Leaders',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  children: [
                     const Icon(Icons.info_outline, color: Colors.blue),
                     const SizedBox(width: 10),
                     InkWell(

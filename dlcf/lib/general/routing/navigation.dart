@@ -14,6 +14,7 @@ import 'package:dlcf/screens/home/components/gallery_category_images.dart';
 import 'package:dlcf/screens/home/home.dart';
 import 'package:dlcf/screens/error/error.dart';
 import 'package:dlcf/screens/home/video_page.dart';
+import 'package:dlcf/screens/leaders/leaders.dart';
 import 'package:dlcf/screens/login/login.dart';
 import 'package:dlcf/screens/membership/membership_screen.dart';
 import 'package:dlcf/screens/notes/components/add_note_form.dart';
@@ -311,6 +312,15 @@ class AppRouter {
             pageBuilder: (context, state) {
               return const MaterialPage(
                 child: AboutUsPage(),
+              );
+            },
+          ),
+          GoRoute(
+            path: RouteNames.leaders,
+            name: RouteNames.leaders,
+            pageBuilder: (context, state) {
+              return const MaterialPage(
+                child: LeadersScreen(),
               );
             },
           ),
