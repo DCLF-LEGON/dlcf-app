@@ -15,6 +15,7 @@ class RouteNames {
   static const String notes = 'notes';
   static const String notedetail = 'notedetail';
   static const String addnote = 'addnote';
+  static const String editnote = 'editnote';
   static const String video = 'video';
   static const String channelmessages = 'channelmessages';
   static const String give = 'give';

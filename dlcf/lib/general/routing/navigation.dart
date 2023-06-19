@@ -18,6 +18,7 @@ import 'package:dlcf/screens/leaders/leaders.dart';
 import 'package:dlcf/screens/login/login.dart';
 import 'package:dlcf/screens/membership/membership_screen.dart';
 import 'package:dlcf/screens/notes/components/add_note_form.dart';
+import 'package:dlcf/screens/notes/components/edit_note_form.dart';
 import 'package:dlcf/screens/notes/components/note_detail.dart';
 import 'package:dlcf/screens/notes/notes.dart';
 import 'package:dlcf/screens/notification/notification.dart';
@@ -187,7 +188,20 @@ class AppRouter {
             },
           ),
           GoRoute(
-            path: '${RouteNames.video}:id/:title/:note/:createdAt',
+            path: '${RouteNames.editnote}:noteID/:title/:note',
+            name: RouteNames.editnote,
+            pageBuilder: (context, state) {
+              return MaterialPage(
+                child: EditNoteFormScreen(
+                  noteID: state.params['noteID']!.toString(),
+                  title: state.params['title']!,
+                  note: state.params['note']!,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            path: '${RouteNames.notedetail}:id/:title/:note/:createdAt',
             name: RouteNames.notedetail,
             pageBuilder: (context, state) {
               return MaterialPage(

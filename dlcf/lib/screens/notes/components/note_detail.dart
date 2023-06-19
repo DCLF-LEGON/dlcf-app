@@ -119,7 +119,15 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
           Column(mainAxisAlignment: MainAxisAlignment.end, children: [
         FloatingActionButton(
           // ensure disable edit button when delete button is clicked
-          onPressed: isDeleting ? null : () {},
+          onPressed: isDeleting
+              ? null
+              : () {
+                  GoRouter.of(context).pushNamed(RouteNames.editnote, params: {
+                    'noteID': widget.id,
+                    'title': widget.title,
+                    'note': widget.note,
+                  });
+                },
           backgroundColor: Colors.blue,
           child: const Icon(Icons.edit, color: Colors.white),
         ),
