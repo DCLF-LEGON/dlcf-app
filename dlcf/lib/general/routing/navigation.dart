@@ -15,6 +15,9 @@ import 'package:dlcf/screens/home/home.dart';
 import 'package:dlcf/screens/error/error.dart';
 import 'package:dlcf/screens/home/video_page.dart';
 import 'package:dlcf/screens/login/login.dart';
+import 'package:dlcf/screens/membership/membership_screen.dart';
+import 'package:dlcf/screens/notes/components/add_note_form.dart';
+import 'package:dlcf/screens/notes/components/note_detail.dart';
 import 'package:dlcf/screens/notes/notes.dart';
 import 'package:dlcf/screens/notification/notification.dart';
 import 'package:dlcf/screens/onboarding/loading_page.dart';
@@ -174,6 +177,29 @@ class AppRouter {
             },
           ),
           GoRoute(
+            path: RouteNames.addnote,
+            name: RouteNames.addnote,
+            pageBuilder: (context, state) {
+              return const MaterialPage(
+                child: AddNoteFormScreen(),
+              );
+            },
+          ),
+          GoRoute(
+            path: '${RouteNames.video}:id/:title/:note/:createdAt',
+            name: RouteNames.notedetail,
+            pageBuilder: (context, state) {
+              return MaterialPage(
+                child: NoteDetailScreen(
+                  id: state.params['id']!.toString(),
+                  title: state.params['title']!,
+                  note: state.params['note']!,
+                  createdAt: state.params['createdAt']!,
+                ),
+              );
+            },
+          ),
+          GoRoute(
             path: RouteNames.notification,
             name: RouteNames.notification,
             pageBuilder: (context, state) {
@@ -188,6 +214,15 @@ class AppRouter {
             pageBuilder: (context, state) {
               return const MaterialPage(
                 child: Profile(),
+              );
+            },
+          ),
+          GoRoute(
+            path: RouteNames.membershipform,
+            name: RouteNames.membershipform,
+            pageBuilder: (context, state) {
+              return const MaterialPage(
+                child: MembershipFormScreen(),
               );
             },
           ),

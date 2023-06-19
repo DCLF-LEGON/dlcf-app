@@ -1,6 +1,5 @@
 import 'package:dlcf/general/components/bottom_nav.dart';
 import 'package:dlcf/screens/profile/components/drawer_body.dart';
-// import 'package:dlcf/screens/profile/components/drawer_body2.dart';
 import 'package:dlcf/screens/profile/components/profile_body.dart';
 import 'package:flutter/material.dart';
 

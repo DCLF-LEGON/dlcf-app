@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/screens/discover/components/suggestion_box.dart';
@@ -122,10 +124,10 @@ class _DiscoverBodyState extends State<DiscoverBody> {
                         );
                       },
                     )
-                  : Center(
+                  : const Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           SizedBox(height: 50),
                           Icon(
                             Icons.not_interested,

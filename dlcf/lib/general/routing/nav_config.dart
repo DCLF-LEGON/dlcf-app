@@ -13,6 +13,8 @@ class RouteNames {
   static const String notification = 'notification';
   static const String profile = 'profile';
   static const String notes = 'notes';
+  static const String notedetail = 'notedetail';
+  static const String addnote = 'addnote';
   static const String video = 'video';
   static const String channelmessages = 'channelmessages';
   static const String give = 'give';
@@ -25,6 +27,7 @@ class RouteNames {
   static const String churchdocuments = 'churchdocuments';
   static const String readdocument = 'readdocument';
   static const String bookmarks = 'bookmarks';
+  static const String membershipform = 'membershipform';
 }
 
 class Networks {

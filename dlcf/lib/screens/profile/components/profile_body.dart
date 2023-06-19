@@ -1,6 +1,8 @@
 import 'package:dlcf/assets.dart';
+import 'package:dlcf/general/routing/nav_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileBody extends StatefulWidget {
@@ -120,7 +122,9 @@ class _ProfileBodyState extends State<ProfileBody> {
             ),
             const SizedBox(height: 10),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                GoRouter.of(context).pushNamed(RouteNames.membershipform);
+              },
               child: const Text('Click To Fill Form'),
             ),
             const SizedBox(height: 60),

@@ -49,7 +49,6 @@ class _DoctrineScreenState extends State<DoctrineScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // GoRouter.of(context).pushNamed(RouteNames.home);
             GoRouter.of(context).pop();
           },
         ),
