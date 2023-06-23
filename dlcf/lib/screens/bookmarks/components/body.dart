@@ -124,9 +124,7 @@ class _BookmarkBodyState extends State<BookmarkBody> {
                         final preacher =
                             filteredMessages[index]['video']['preacher'];
                         final preacherName = preacher != null
-                            ? preacher['video']['title'] +
-                                '. ' +
-                                preacher['name']
+                            ? preacher['title'] + '. ' + preacher['name']
                             : 'Pastor Dr. W. F. Kumuyi';
                         return SuggestionBox(
                           title: filteredMessages[index]['video']['title'],

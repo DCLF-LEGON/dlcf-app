@@ -45,6 +45,8 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
           print("NAME: ${widget.title}");
           FileDownloader.downloadFile(
               url: widget.document,
+              // url:
+              //     "https://media.gettyimages.com/id/1322703303/video/maze-4k-resolution.mp4?s=mp4-640x640-gi&k=20&c=1dENncKzIly1PjRgoywqfOmq1meeBHM5oAh-TpKY41o=",
               name: widget.title,
               onProgress: (fileName, progress) {
                 print('FILE $fileName HAS PROGRESS $progress');
