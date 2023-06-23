@@ -1,9 +1,7 @@
-import 'package:dlcf/general/routing/nav_config.dart';
 import 'package:dlcf/screens/give/components/give_alert.dart';
 import 'package:dlcf/screens/give/components/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:go_router/go_router.dart';
 
 class GiveBody extends StatelessWidget {
   const GiveBody({super.key});

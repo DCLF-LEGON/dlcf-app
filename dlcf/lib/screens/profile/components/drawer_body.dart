@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/assets.dart';
@@ -32,16 +32,23 @@ class _DrawerBodyState extends State<DrawerBody> {
     );
 
     if (response.statusCode == 204) {
-      // ignore: avoid_print
-      print("Logout successful");
+      print("Logout Successful");
       prefs.remove('userToken');
       prefs.remove('name');
       prefs.remove('userEmail');
       prefs.remove('profileImage');
       prefs.remove('isLoggedIn');
+      // remove membership info
+      prefs.remove('program');
+      prefs.remove('department');
+      prefs.remove('level');
+      prefs.remove('hall');
+      prefs.remove('room');
+      prefs.remove('phone');
+      prefs.remove('gender');
+      prefs.remove('membership_status');
       return response.statusCode;
     }
-    // ignore: avoid_print
     print("Error Occured: Status Code: ${response.statusCode}");
     return response.statusCode;
   }
@@ -54,11 +61,8 @@ class _DrawerBodyState extends State<DrawerBody> {
 
   void getUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // final String? email = prefs.getString("userEmail");
-    // final String? profile = prefs.getString("profileImage");
     final String? email = prefs.getString("userEmail");
     setState(() {
-      // _userEmail = email.toString();
       _userEmail = email.toString();
     });
   }

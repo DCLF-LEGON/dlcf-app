@@ -51,9 +51,18 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
               },
               onDownloadCompleted: (String path) {
                 print('FILE DOWNLOADED TO PATH: $path');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Downloaded to $path'),
+                  ),
+                );
               },
               onDownloadError: (String error) {
-                print('DOWNLOAD ERROR: $error');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Error Downloading File!'),
+                  ),
+                );
               });
         },
         child: const Icon(Icons.cloud_download_outlined),
@@ -62,8 +71,3 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
     );
   }
 }
-
-
-
-
-

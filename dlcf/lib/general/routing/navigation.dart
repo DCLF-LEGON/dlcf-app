@@ -16,6 +16,7 @@ import 'package:dlcf/screens/error/error.dart';
 import 'package:dlcf/screens/home/video_page.dart';
 import 'package:dlcf/screens/leaders/leaders.dart';
 import 'package:dlcf/screens/login/login.dart';
+import 'package:dlcf/screens/membership/membership_detail.dart';
 import 'package:dlcf/screens/membership/membership_screen.dart';
 import 'package:dlcf/screens/notes/components/add_note_form.dart';
 import 'package:dlcf/screens/notes/components/edit_note_form.dart';
@@ -238,6 +239,15 @@ class AppRouter {
             pageBuilder: (context, state) {
               return const MaterialPage(
                 child: MembershipFormScreen(),
+              );
+            },
+          ),
+          GoRoute(
+            path: RouteNames.membershipdetail,
+            name: RouteNames.membershipdetail,
+            pageBuilder: (context, state) {
+              return const MaterialPage(
+                child: MembersshipInfoDetailScreen(),
               );
             },
           ),

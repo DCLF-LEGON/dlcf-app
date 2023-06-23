@@ -132,17 +132,29 @@ class _ChurchDocumentScreenState extends State<ChurchDocumentScreen> {
                                                 onProgress:
                                                     (fileName, progress) {
                                                   print(
-                                                      'FILE fileName HAS PROGRESS $progress');
+                                                      'FILE $fileName HAS PROGRESS $progress');
                                                 },
                                                 onDownloadCompleted:
                                                     (String path) {
                                                   print(
                                                       'FILE DOWNLOADED TO PATH: $path');
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                          'Downloaded to $path'),
+                                                    ),
+                                                  );
                                                 },
                                                 onDownloadError:
                                                     (String error) {
-                                                  print(
-                                                      'DOWNLOAD ERROR: $error');
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                          'Error Downloading File!'),
+                                                    ),
+                                                  );
                                                 });
                                           },
                                         ),

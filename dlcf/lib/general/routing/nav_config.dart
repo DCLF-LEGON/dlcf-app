@@ -29,6 +29,7 @@ class RouteNames {
   static const String readdocument = 'readdocument';
   static const String bookmarks = 'bookmarks';
   static const String membershipform = 'membershipform';
+  static const String membershipdetail = 'membershipdetail';
   static const String leaders = 'leaders';
 }
 

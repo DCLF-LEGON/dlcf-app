@@ -14,6 +14,8 @@ class ProfileBody extends StatefulWidget {
 
 class _ProfileBodyState extends State<ProfileBody> {
   String _userName = 'Anonymous User';
+  String _membershipStatus = 'Not Completed';
+  // String _membershipStatus = 'Not Completed';
   final String _profileImage = Assets.assetsPicturesProfile;
 
   @override
@@ -25,8 +27,10 @@ class _ProfileBodyState extends State<ProfileBody> {
   void getUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? name = prefs.getString("name");
+    final String? membershipStatus = prefs.getString("membership_status");
     setState(() {
       _userName = name.toString();
+      _membershipStatus = membershipStatus.toString();
     });
   }
 
@@ -98,20 +102,22 @@ class _ProfileBodyState extends State<ProfileBody> {
               color: Colors.black,
             ),
             const SizedBox(height: 15),
-            const Row(
+            Row(
               children: [
-                Text(
+                const Text(
                   'Membership Form',
                   style: TextStyle(
                     fontSize: 16,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
-                  'Not Completed',
+                  _membershipStatus,
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.red,
+                    color: _membershipStatus == 'Completed'
+                        ? Colors.green
+                        : Colors.red,
                   ),
                 ),
               ],
@@ -123,9 +129,15 @@ class _ProfileBodyState extends State<ProfileBody> {
             const SizedBox(height: 10),
             TextButton(
               onPressed: () {
-                GoRouter.of(context).pushNamed(RouteNames.membershipform);
+                if (_membershipStatus == 'Completed') {
+                  GoRouter.of(context).pushNamed(RouteNames.membershipdetail);
+                } else {
+                  GoRouter.of(context).pushNamed(RouteNames.membershipform);
+                }
               },
-              child: const Text('Click To Fill Form'),
+              child: _membershipStatus == 'Completed'
+                  ? const Text('Click To View Info')
+                  : const Text('Click To Fill Form'),
             ),
             const SizedBox(height: 60),
             ElevatedButton(

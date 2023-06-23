@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/constants/colors.dart';
@@ -24,6 +24,7 @@ class _BodyState extends State<Body> {
 
   Future<int> login(email, password) async {
     final Uri loginURL = Uri.parse(EndPoints.login);
+    print('Making Request');
     final response = await http.post(
       loginURL,
       body: json.encode({
@@ -35,15 +36,22 @@ class _BodyState extends State<Body> {
       },
     );
 
+    print('Done with Request');
+    setState(() {
+      isLoading = false;
+    });
     if (response.statusCode == 200) {
-      // ignore: avoid_print
       print('Login Successful: Code: ${response.statusCode}');
-      // save the data using sharedpreferences
+      // extract data from api response
       final Map<String, dynamic> responseData = json.decode(response.body);
       final String token = responseData['token'];
       final String name = responseData['user']['fullname'];
       final String email = responseData['user']['email'];
       final dynamic profilePic = responseData['user']['profile_pic'];
+      final dynamic membershipInfo = responseData['membership_info'];
+      final bool membershipInfoCompleted =
+          responseData['membership_info_completed'];
+      // save data into local storage using shared preferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('userToken', token);
       prefs.setBool('isLoggedIn', true);
@@ -52,9 +60,24 @@ class _BodyState extends State<Body> {
       if (profilePic != null) {
         prefs.setString('profileImage', profilePic);
       }
+      print("membership info: $membershipInfo");
+      print("membership info type: ${membershipInfo.runtimeType}");
+      // save user's membership info if it exists
+      if (membershipInfoCompleted) {
+        print("Member info is completed");
+        prefs.setString('program', membershipInfo['program'].toString());
+        prefs.setString('department', membershipInfo['department'].toString());
+        prefs.setString('level', membershipInfo['level'].toString());
+        prefs.setString('hall', membershipInfo['hall'].toString());
+        prefs.setString('room', membershipInfo['room'].toString());
+        prefs.setString('phone', membershipInfo['phone'].toString());
+        prefs.setString('gender', membershipInfo['gender'].toString());
+        prefs.setString('membership_status', "Completed");
+      } else {
+        prefs.setString('membership_status', "Not Completed");
+      }
       return response.statusCode;
     } else if (response.statusCode == 403) {
-      // ignore: avoid_print
       print('OTP NOT VERIFIED: Code: ${response.statusCode}');
       final Map<String, dynamic> responseData = json.decode(response.body);
       final String token = responseData['token'];
@@ -70,7 +93,6 @@ class _BodyState extends State<Body> {
       }
       return response.statusCode;
     } else {
-      // ignore: avoid_print
       print('Login Error: Error Code: ${response.statusCode}');
       return response.statusCode;
     }
@@ -133,9 +155,8 @@ class _BodyState extends State<Body> {
                       Checkbox(
                           value: true,
                           onChanged: (value) {
-                            // ignore: avoid_print
                             print('Print something$value');
-                            value = !value!;
+                            value = value!;
                           }),
                       const Text('Remember Me'),
                       const Spacer(),
@@ -157,7 +178,18 @@ class _BodyState extends State<Body> {
                           final username = emailController.text;
                           final password = passwordController.text;
                           // check if any of the fields are empty
-                          if (username.isEmpty || password.isEmpty) {}
+                          if (username.isEmpty || password.isEmpty) {
+                            // scaffold messenger
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('All Fields Are Required!'),
+                              ),
+                            );
+                            setState(() {
+                              isLoading = false;
+                            });
+                            return;
+                          }
                           // hit endpoint
                           final res = await login(username, password);
                           // stop loading
@@ -191,7 +223,7 @@ class _BodyState extends State<Body> {
                               horizontal: 30, vertical: 10),
                           child: isLoading
                               ? const Center(
-                                  child: CircularProgressIndicator(
+                                  child: LinearProgressIndicator(
                                   color: Colors.blue,
                                 ))
                               : const Text('Login',

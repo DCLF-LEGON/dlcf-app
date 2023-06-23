@@ -1,9 +1,13 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
+import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/general/components/bottom_nav.dart';
+import 'package:dlcf/general/routing/nav_config.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class MembershipFormScreen extends StatefulWidget {
   const MembershipFormScreen({super.key});
@@ -70,7 +74,6 @@ class _MembershipFormScreenState extends State<MembershipFormScreen> {
   }
 }
 
-
 // Create a Form widget.
 // ignore: must_be_immutable
 class MyCustomForm extends StatefulWidget {
@@ -80,7 +83,7 @@ class MyCustomForm extends StatefulWidget {
   String hall;
   String room;
   String phone;
-  final String gender;
+  String gender;
   MyCustomForm({
     super.key,
     required this.program,
@@ -99,9 +102,69 @@ class MyCustomForm extends StatefulWidget {
 }
 
 class MyCustomFormState extends State<MyCustomForm> {
-
   bool isChecked = false;
+  bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
+
+  Future<int> saveMembershipInfo(
+    String program,
+    String department,
+    String level,
+    String hall,
+    String room,
+    String phone,
+    String gender,
+  ) async {
+    setState(() {
+      isLoading = true;
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString("userToken");
+    final Uri addMembershipURL = Uri.parse(EndPoints.addMembershipInfo);
+    final response = await http.post(
+      addMembershipURL,
+      body: json.encode({
+        'program': program,
+        'department': department,
+        'level': level,
+        'hall': hall,
+        'room': room,
+        'phone': phone,
+        'gender': gender,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': "Token ${token.toString()}",
+      },
+    );
+    setState(() {
+      isLoading = false;
+    });
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final dynamic membershipInfo = responseData['membership_info'];
+      // save user's membership info if it exists
+      if (membershipInfo != null) {
+        prefs.setString('program', membershipInfo['program'].toString());
+        prefs.setString('department', membershipInfo['department'].toString());
+        prefs.setString('level', membershipInfo['level'].toString());
+        prefs.setString('hall', membershipInfo['hall'].toString());
+        prefs.setString('room', membershipInfo['room'].toString());
+        prefs.setString('phone', membershipInfo['phone'].toString());
+        prefs.setString('gender', membershipInfo['gender'].toString());
+        prefs.setString('membership_status', 'Completed');
+      } else {
+        prefs.setString('membership_status', 'Not Completed');
+      }
+    }
+    print(response.reasonPhrase);
+    return response.statusCode;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +182,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                   widget.program = value;
                 });
               },
-              // controller: programController,
               initialValue: widget.program,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -137,7 +199,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                   widget.department = value;
                 });
               },
-              // controller: departmentController,
               initialValue: widget.department,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -150,11 +211,12 @@ class MyCustomFormState extends State<MyCustomForm> {
               ),
             ),
             DropdownButtonFormField(
-              value: 'Level 100',
+              value: 'Choose Level...',
               decoration: const InputDecoration(
                 labelText: 'Level',
               ),
               items: const <String>[
+                'Choose Level...',
                 'Level 100',
                 'Level 200',
                 'Level 300',
@@ -176,18 +238,21 @@ class MyCustomFormState extends State<MyCustomForm> {
                 });
               },
               validator: (value) {
-                if (value == null || value.isEmpty) {
+                if (value == null ||
+                    value.isEmpty ||
+                    value == "Choose Level...") {
                   return 'This field is required';
                 }
                 return null;
               },
             ),
             DropdownButtonFormField(
-              value: 'Non-Resident',
+              value: 'Choose Hall...',
               decoration: const InputDecoration(
                 labelText: 'Hall',
               ),
               items: const <String>[
+                'Choose Hall...',
                 'Akuafo Hall',
                 'Legon Hall',
                 'Sarbah Hall',
@@ -213,7 +278,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                 });
               },
               validator: (value) {
-                if (value == null || value.isEmpty) {
+                if (value == null ||
+                    value.isEmpty ||
+                    value == "Choose Hall...") {
                   return 'This field is required';
                 }
                 return null;
@@ -225,7 +292,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                   widget.room = value;
                 });
               },
-              // controller: roomController,
               initialValue: widget.room,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -237,13 +303,41 @@ class MyCustomFormState extends State<MyCustomForm> {
                 labelText: 'Room Number',
               ),
             ),
+            DropdownButtonFormField(
+              value: 'Choose Gender...',
+              decoration: const InputDecoration(
+                labelText: 'Gender',
+              ),
+              items: const <String>[
+                'Choose Gender...',
+                'Male',
+                'Female',
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  widget.gender = newValue!;
+                });
+              },
+              validator: (value) {
+                if (value == null ||
+                    value.isEmpty ||
+                    value == "Choose Gender...") {
+                  return 'This field is required';
+                }
+                return null;
+              },
+            ),
             TextFormField(
               onChanged: (value) {
                 setState(() {
                   widget.phone = value;
                 });
               },
-              // controller: phoneController,
               initialValue: widget.phone,
               keyboardType: TextInputType.phone,
               validator: (value) {
@@ -268,19 +362,34 @@ class MyCustomFormState extends State<MyCustomForm> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: ElevatedButton(
-                onPressed: () {
-                  // print out the various values
+                onPressed: () async {
                   print(widget.program);
                   print(widget.department);
                   print(widget.level);
                   print(widget.hall);
                   print(widget.room);
                   print(widget.phone);
+                  print(widget.gender);
                   // Validate returns true if the form is valid, or false otherwise.
                   if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Saving Data')),
+                    final int res = await saveMembershipInfo(
+                      widget.program,
+                      widget.department,
+                      widget.level,
+                      widget.hall,
+                      widget.room,
+                      widget.phone,
+                      widget.gender,
                     );
+                    if (res == 200 || res == 201) {
+                      GoRouter.of(context).pushNamed(RouteNames.profile);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('An Error Occured'),
+                        ),
+                      );
+                    }
                   }
                 },
                 child: const Text('Submit'),

@@ -52,6 +52,7 @@ class _BodyState extends State<Body> {
       final String name = responseData['user']['fullname'];
       final String email = responseData['user']['email'];
       final dynamic profilePic = responseData['user']['profile_pic'];
+      final dynamic membershipInfo = responseData['membership_info'];
 
       print('Signup successful. Token: $token');
 
@@ -63,15 +64,25 @@ class _BodyState extends State<Body> {
       if (profilePic != null) {
         prefs.setString('profileImage', profilePic);
       }
+      // save user's membership info if it exists
+      if (membershipInfo != null) {
+        prefs.setString('program', membershipInfo['program']);
+        prefs.setString('department', membershipInfo['department']);
+        prefs.setString('level', membershipInfo['level']);
+        prefs.setString('hall', membershipInfo['hall']);
+        prefs.setString('room', membershipInfo['room']);
+        prefs.setString('phone', membershipInfo['phone']);
+        prefs.setString('gender', membershipInfo['gender']);
+        prefs.setString('membership_status', 'Completed');
+      } else {
+        prefs.setString('membership_status', 'Not Completed');
+      }
       prefs.setBool('isLoggedIn', true);
 
-      // GoRouter.of(context).pushNamed(RouteNames.verifyotp);
       return response.statusCode;
     } else {
-      // Signup failed, handle the error
       print('Signup failed. Response Code: ${response.statusCode}');
       return response.statusCode;
-      // Show an error message to the user or handle the error in another way
     }
   }
 
