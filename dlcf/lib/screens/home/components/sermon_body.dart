@@ -80,9 +80,9 @@ class SermonBody extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              Row(
+              const Row(
                 // mainAxisAlignment: ,
-                children: const <Widget>[
+                children: <Widget>[
                   Text(
                     'Welcome to the',
                     style: TextStyle(fontSize: 16),
