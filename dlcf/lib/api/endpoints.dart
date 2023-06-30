@@ -4,8 +4,10 @@
 class EndPoints {
   // static const String BASE = 'http://127.0.0.1:8000';
   // static const String baseUrl = 'http://127.0.0.1:8000/api/';
-  static const String BASE = 'http://165.232.71.253';
-  static const String baseUrl = 'http://165.232.71.253/api/';
+  // static const String BASE = 'http://165.232.71.253';
+  // static const String baseUrl = 'http://165.232.71.253/api/';
+  static const String BASE = 'https://www.dlcflegonapp.com';
+  static const String baseUrl = 'https://www.dlcflegonapp.com/api/';
   static const String login = '${baseUrl}login/';
   static const String signup = '${baseUrl}sign-up/';
   static const String logout = '${baseUrl}logout/';

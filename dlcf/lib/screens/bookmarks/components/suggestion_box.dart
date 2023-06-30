@@ -43,8 +43,9 @@ class SuggestionBox extends StatelessWidget {
               width: 80,
               decoration: BoxDecoration(
                 image: const DecorationImage(
-                    image: AssetImage(Assets.assetsThumbnailsBibleStudy),
-                    fit: BoxFit.cover),
+                  image: AssetImage(Assets.assetsThumbnailsBibleStudy),
+                  fit: BoxFit.cover,
+                ),
                 color: Colors.blue,
                 borderRadius: BorderRadius.circular(10),
               ),

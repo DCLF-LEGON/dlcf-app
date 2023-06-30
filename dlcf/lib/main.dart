@@ -14,9 +14,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routerDelegate: AppRouter().router.routerDelegate,
       routeInformationParser: AppRouter().router.routeInformationParser,
-      // routeInformationProvider: PlatformRouteInformationProvider(
-      //   initialRouteInformation: RouteInformation(location: initialRoute),
-      // ),
     );
   }
 }

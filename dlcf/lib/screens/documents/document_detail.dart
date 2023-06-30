@@ -22,6 +22,7 @@ class DocumentDetailScreen extends StatefulWidget {
 }
 
 class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
+  bool isDownloading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,16 +44,20 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
         onPressed: () {
           print("URL: ${widget.document}");
           print("NAME: ${widget.title}");
+          setState(() {
+            isDownloading = true;
+          });
           FileDownloader.downloadFile(
               url: widget.document,
-              // url:
-              //     "https://media.gettyimages.com/id/1322703303/video/maze-4k-resolution.mp4?s=mp4-640x640-gi&k=20&c=1dENncKzIly1PjRgoywqfOmq1meeBHM5oAh-TpKY41o=",
               name: widget.title,
               onProgress: (fileName, progress) {
                 print('FILE $fileName HAS PROGRESS $progress');
               },
               onDownloadCompleted: (String path) {
                 print('FILE DOWNLOADED TO PATH: $path');
+                setState(() {
+                  isDownloading = false;
+                });
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Downloaded to $path'),
@@ -60,6 +65,9 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                 );
               },
               onDownloadError: (String error) {
+                setState(() {
+                  isDownloading = false;
+                });
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Error Downloading File!'),
@@ -67,7 +75,11 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                 );
               });
         },
-        child: const Icon(Icons.cloud_download_outlined),
+        child: isDownloading
+            ? const CircularProgressIndicator(
+                color: Colors.white,
+              )
+            : const Icon(Icons.cloud_download_outlined),
       ),
       bottomNavigationBar: CustomBottomNav(selectedTab: 4),
     );

@@ -22,6 +22,7 @@ class _MessagePlayerState extends State<MessagePlayer> {
         autoPlay: true,
         mute: false,
         enableCaption: false,
+        showLiveFullscreenButton: false,
       ),
     );
   }

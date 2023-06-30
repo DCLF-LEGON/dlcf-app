@@ -21,6 +21,8 @@ class ChurchDocumentScreen extends StatefulWidget {
 class _ChurchDocumentScreenState extends State<ChurchDocumentScreen> {
   List<dynamic> documents = [];
   bool isLoading = false;
+  bool isDownloading = false;
+  int downloadingIndex = 1000000;
 
   @override
   void initState() {
@@ -119,11 +121,30 @@ class _ChurchDocumentScreenState extends State<ChurchDocumentScreen> {
                                           'Click To Read Document',
                                         ),
                                         trailing: InkWell(
-                                          child: const Icon(
-                                            Icons.cloud_download,
-                                            size: 36,
-                                          ),
+                                          child: (isDownloading &&
+                                                  (downloadingIndex == index))
+                                              ? const CircularProgressIndicator(
+                                                  color: Colors.white,
+                                                )
+                                              : const Icon(
+                                                  Icons.cloud_download,
+                                                  size: 36,
+                                                ),
                                           onTap: () {
+                                            if (isDownloading) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                      'Cannot Download Multiple Files at once!'),
+                                                ),
+                                              );
+                                              return;
+                                            }
+                                            setState(() {
+                                              isDownloading = true;
+                                              downloadingIndex = index;
+                                            });
                                             FileDownloader.downloadFile(
                                                 url: EndPoints.BASE +
                                                     documents[index]
@@ -138,6 +159,9 @@ class _ChurchDocumentScreenState extends State<ChurchDocumentScreen> {
                                                     (String path) {
                                                   print(
                                                       'FILE DOWNLOADED TO PATH: $path');
+                                                  setState(() {
+                                                    isDownloading = false;
+                                                  });
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(
                                                     SnackBar(
@@ -148,6 +172,9 @@ class _ChurchDocumentScreenState extends State<ChurchDocumentScreen> {
                                                 },
                                                 onDownloadError:
                                                     (String error) {
+                                                  setState(() {
+                                                    isDownloading = false;
+                                                  });
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(
                                                     const SnackBar(
