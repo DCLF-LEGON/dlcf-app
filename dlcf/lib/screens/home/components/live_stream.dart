@@ -1,5 +1,12 @@
+// ignore_for_file: avoid_print
+
+import 'dart:convert';
+
+import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/screens/home/components/video_body.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class LiveStreamBody extends StatefulWidget {
   const LiveStreamBody({Key? key}) : super(key: key);
@@ -10,8 +17,7 @@ class LiveStreamBody extends StatefulWidget {
 }
 
 class _LiveStreamBodyState extends State<LiveStreamBody> {
-  List<dynamic> categories = [];
-  List<dynamic> streamData = [];
+  Map<String, dynamic> streamData = {};
   bool isLoading = false;
 
   @override
@@ -25,12 +31,30 @@ class _LiveStreamBodyState extends State<LiveStreamBody> {
       isLoading = true;
     });
 
-    // delay for 3 secs
-    await Future.delayed(const Duration(seconds: 3));
-
+    //  fetch stream data
+    final Uri getStreamURL = Uri.parse(EndPoints.getLiveStream);
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final String? token = prefs.getString("userToken");
+    final response = await http.get(
+      getStreamURL,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
     setState(() {
       isLoading = false;
     });
+    if (response.statusCode == 200) {
+      print('STREAM VIDEO FETCHED: ${response.statusCode}');
+      setState(() {
+        streamData = json.decode(response.body)['stream'];
+      });
+      print('STREAM DATA: $streamData');
+      return response.statusCode;
+    } else {
+      print('ERROR OCCURED: CODE: ${response.statusCode}');
+      return response.statusCode;
+    }
   }
 
   @override
@@ -38,13 +62,14 @@ class _LiveStreamBodyState extends State<LiveStreamBody> {
     return SafeArea(
       child: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : categories.isNotEmpty
+          : streamData.isNotEmpty
               ? VideoBody(
-                  title: streamData[0]['title'],
-                  url: streamData[0]['video_id'],
-                  description: streamData[0]['description'],
-                  preacher: 'Pastor Dr. W. F. Kumuyi',
+                  title: streamData['title'],
+                  url: streamData['video_id'],
+                  description: streamData['description'],
+                  preacher: streamData['preacher'],
                   thumbnailUrl: '',
+                  isLive: true,
                 )
               : const Center(
                   child: Column(

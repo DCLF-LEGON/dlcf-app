@@ -15,6 +15,8 @@ class VideoBody extends StatefulWidget {
   final String url;
   final String description;
   final String thumbnailUrl;
+  final bool isLive;
+  final String videoID;
   const VideoBody({
     super.key,
     required this.title,
@@ -22,6 +24,8 @@ class VideoBody extends StatefulWidget {
     required this.url,
     required this.description,
     required this.thumbnailUrl,
+    this.isLive = false,
+    this.videoID = '',
   });
 
   @override
@@ -94,7 +98,7 @@ class _VideoBodyState extends State<VideoBody> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: MessagePlayer(vidUrl: widget.url),
+          child: MessagePlayer(vidUrl: widget.url, isLive: true, videoID: widget.videoID),
         ),
         const SizedBox(height: 10),
         Text(

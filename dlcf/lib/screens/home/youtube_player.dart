@@ -3,7 +3,14 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MessagePlayer extends StatefulWidget {
   final String vidUrl;
-  const MessagePlayer({super.key, required this.vidUrl});
+  final bool isLive;
+  final String videoID;
+  const MessagePlayer({
+    super.key,
+    required this.vidUrl,
+    this.isLive = false,
+    this.videoID = "",
+  });
 
   @override
   // ignore: library_private_types_in_public_api
@@ -17,9 +24,10 @@ class _MessagePlayerState extends State<MessagePlayer> {
   void initState() {
     super.initState();
     _controller = YoutubePlayerController(
-      initialVideoId: widget.vidUrl,
-      flags: const YoutubePlayerFlags(
+      initialVideoId: widget.isLive ? widget.videoID : widget.vidUrl,
+      flags: YoutubePlayerFlags(
         autoPlay: true,
+        isLive: widget.isLive,
         mute: false,
         enableCaption: false,
         showLiveFullscreenButton: false,
@@ -50,8 +58,8 @@ class _MessagePlayerState extends State<MessagePlayer> {
               print('Player is ready.');
             },
             onEnded: (metadata) {
-              _controller.load(
-                  widget.vidUrl); // Add your desired video ID to loop the video
+              final nextPage = widget.isLive ? widget.videoID : widget.vidUrl;
+              _controller.load(nextPage); // loops this video
             },
           ),
           builder: (context, player) {

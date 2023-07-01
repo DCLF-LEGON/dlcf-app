@@ -56,4 +56,6 @@ class EndPoints {
   static const String getMembershipInfo = '${baseUrl}get-membership-info/';
 
   static const String addMembershipInfo = '${baseUrl}add-membership-info/';
+
+  static const String getLiveStream = '${baseUrl}get-live-stream/';
 }
