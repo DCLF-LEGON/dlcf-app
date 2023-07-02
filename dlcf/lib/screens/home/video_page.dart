@@ -43,6 +43,7 @@ class VideoScreen extends StatelessWidget {
               preacher: preacher,
               thumbnailUrl: thumbnailUrl,
               title: title,
+              isLive: false,
             ),
           ),
         ),

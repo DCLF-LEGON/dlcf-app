@@ -98,7 +98,11 @@ class _VideoBodyState extends State<VideoBody> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: MessagePlayer(vidUrl: widget.url, isLive: true, videoID: widget.videoID),
+          child: MessagePlayer(
+            vidUrl: widget.url,
+            isLive: widget.isLive,
+            videoID: widget.videoID,
+          ),
         ),
         const SizedBox(height: 10),
         Text(

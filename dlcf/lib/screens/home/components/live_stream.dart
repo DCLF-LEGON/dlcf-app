@@ -63,13 +63,18 @@ class _LiveStreamBodyState extends State<LiveStreamBody> {
       child: isLoading
           ? const Center(child: CircularProgressIndicator())
           : streamData.isNotEmpty
-              ? VideoBody(
-                  title: streamData['title'],
-                  url: streamData['video_id'],
-                  description: streamData['description'],
-                  preacher: streamData['preacher'],
-                  thumbnailUrl: '',
-                  isLive: true,
+              ? Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  child: VideoBody(
+                    title: streamData['title'],
+                    url: streamData['url'],
+                    description: streamData['description'],
+                    preacher: streamData['preacher'],
+                    thumbnailUrl: '',
+                    videoID: streamData['video_id'],
+                    isLive: true,
+                  ),
                 )
               : const Center(
                   child: Column(

@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "dlcf" "\0"
+            VALUE "FileDescription", "DLCF Legon App" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "dlcf" "\0"
+            VALUE "InternalName", "DLCF Legon App" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
             VALUE "OriginalFilename", "dlcf.exe" "\0"
-            VALUE "ProductName", "dlcf" "\0"
+            VALUE "ProductName", "DLCF Legon App" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
