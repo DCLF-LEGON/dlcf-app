@@ -35,15 +35,18 @@ class VideoScreen extends StatelessWidget {
           ),
         ),
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: VideoBody(
-              url: url,
-              description: description,
-              preacher: preacher,
-              thumbnailUrl: thumbnailUrl,
-              title: title,
-              isLive: false,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: VideoBody(
+                url: url,
+                description: description,
+                preacher: preacher,
+                thumbnailUrl: thumbnailUrl,
+                title: title,
+                isLive: false,
+              ),
             ),
           ),
         ),

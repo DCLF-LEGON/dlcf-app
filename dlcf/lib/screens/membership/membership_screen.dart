@@ -357,19 +357,21 @@ class MyCustomFormState extends State<MyCustomForm> {
                 setState(() {
                   isChecked = value!;
                 });
+                print("Is Checked Value: $isChecked");
               },
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: ElevatedButton(
                 onPressed: () async {
-                  print(widget.program);
-                  print(widget.department);
-                  print(widget.level);
-                  print(widget.hall);
-                  print(widget.room);
-                  print(widget.phone);
-                  print(widget.gender);
+                  if (isChecked == false) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('You must check the agreement box'),
+                      ),
+                    );
+                    return;
+                  }
                   // Validate returns true if the form is valid, or false otherwise.
                   if (_formKey.currentState!.validate()) {
                     final int res = await saveMembershipInfo(

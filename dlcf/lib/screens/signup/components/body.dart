@@ -65,7 +65,7 @@ class _BodyState extends State<Body> {
         prefs.setString('profileImage', profilePic);
       }
       // save user's membership info if it exists
-      if (membershipInfo != null) {
+      if (membershipInfo != null ) {
         prefs.setString('program', membershipInfo['program']);
         prefs.setString('department', membershipInfo['department']);
         prefs.setString('level', membershipInfo['level']);

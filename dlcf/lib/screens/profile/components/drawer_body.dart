@@ -4,6 +4,7 @@ import 'package:dlcf/api/endpoints.dart';
 import 'package:dlcf/assets.dart';
 import 'package:dlcf/general/routing/nav_config.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:http/http.dart' as http;
@@ -219,15 +220,29 @@ class _DrawerBodyState extends State<DrawerBody> {
                   height: 2,
                 ),
                 const SizedBox(height: 15),
-                const Row(
-                  children: [
-                    Icon(Icons.settings, color: Colors.blue),
-                    SizedBox(width: 10),
-                    Text(
-                      'Settings',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  ],
+                InkWell(
+                  onTap: () {
+                    Fluttertoast.showToast(
+                      msg: "Coming Soon!",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.blue,
+                      fontSize: 16.0,
+                    );
+                    return;
+                  },
+                  child: const Row(
+                    children: [
+                      Icon(Icons.share, color: Colors.blue),
+                      SizedBox(width: 10),
+                      Text(
+                        'Share',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 15),
                 InkWell(

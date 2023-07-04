@@ -1,6 +1,6 @@
 class Assets {
   Assets._();
-  
+
   /// Assets for assetsErrorsError1
   /// assets/errors/error1.jpg
   static const String assetsErrorsError1 = "assets/errors/error1.jpg";
@@ -8,6 +8,11 @@ class Assets {
   /// Assets for assetsErrorsError2
   /// assets/errors/error2.jpg
   static const String assetsErrorsError2 = "assets/errors/error2.jpg";
+
+  /// Assets for assetsLogosAppLauncherIcon
+  /// assets/logos/app_launcher_icon.png
+  static const String assetsLogosAppLauncherIcon =
+      "assets/logos/app_launcher_icon.png";
 
   /// Assets for assetsLogosDlcfLogo
   /// assets/logos/dlcf_logo.png
@@ -19,7 +24,8 @@ class Assets {
 
   /// Assets for assetsNetworksAirteltigo
   /// assets/networks/airteltigo.png
-  static const String assetsNetworksAirteltigo = "assets/networks/airteltigo.png";
+  static const String assetsNetworksAirteltigo =
+      "assets/networks/airteltigo.png";
 
   /// Assets for assetsNetworksAll
   /// assets/networks/all.png
@@ -53,59 +59,8 @@ class Assets {
   /// assets/pictures/profile.png
   static const String assetsPicturesProfile = "assets/pictures/profile.png";
 
-  /// Assets for assetsPicturesPuppy
-  /// assets/pictures/puppy.jpg
-  static const String assetsPicturesPuppy = "assets/pictures/puppy.jpg";
-
-  /// Assets for assetsThumbnailsBible
-  /// assets/thumbnails/bible.png
-  static const String assetsThumbnailsBible = "assets/thumbnails/bible.png";
-
   /// Assets for assetsThumbnailsBibleStudy
   /// assets/thumbnails/bible-study.png
-  static const String assetsThumbnailsBibleStudy = "assets/thumbnails/bible-study.png";
-
-  /// Assets for assetsThumbnailsCampus
-  /// assets/thumbnails/campus.png
-  static const String assetsThumbnailsCampus = "assets/thumbnails/campus.png";
-
-  /// Assets for assetsThumbnailsChoir
-  /// assets/thumbnails/choir.png
-  static const String assetsThumbnailsChoir = "assets/thumbnails/choir.png";
-
-  /// Assets for assetsThumbnailsCongress
-  /// assets/thumbnails/congress.png
-  static const String assetsThumbnailsCongress = "assets/thumbnails/congress.png";
-
-  /// Assets for assetsThumbnailsFirehour
-  /// assets/thumbnails/firehour.png
-  static const String assetsThumbnailsFirehour = "assets/thumbnails/firehour.png";
-
-  /// Assets for assetsThumbnailsGs
-  /// assets/thumbnails/gs.png
-  static const String assetsThumbnailsGs = "assets/thumbnails/gs.png";
-
-  /// Assets for assetsThumbnailsImpact
-  /// assets/thumbnails/impact.png
-  static const String assetsThumbnailsImpact = "assets/thumbnails/impact.png";
-
-  /// Assets for assetsThumbnailsKoinonia
-  /// assets/thumbnails/koinonia.png
-  static const String assetsThumbnailsKoinonia = "assets/thumbnails/koinonia.png";
-
-  /// Assets for assetsThumbnailsNc
-  /// assets/thumbnails/nc.png
-  static const String assetsThumbnailsNc = "assets/thumbnails/nc.png";
-
-  /// Assets for assetsThumbnailsSerminars
-  /// assets/thumbnails/serminars.png
-  static const String assetsThumbnailsSerminars = "assets/thumbnails/serminars.png";
-
-  /// Assets for assetsThumbnailsVideo
-  /// assets/thumbnails/video.png
-  static const String assetsThumbnailsVideo = "assets/thumbnails/video.png";
-
-  /// Assets for assetsThumbnailsYouth
-  /// assets/thumbnails/youth.png
-  static const String assetsThumbnailsYouth = "assets/thumbnails/youth.png";
+  static const String assetsThumbnailsBibleStudy =
+      "assets/thumbnails/bible-study.png";
 }

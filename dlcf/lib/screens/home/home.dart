@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: const Text(
-              'DLCF APP',
+              'DLCF LEGON APP',
               style: TextStyle(
                 color: Colors.blue,
                 fontWeight: FontWeight.bold,

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class RecentlyBox extends StatelessWidget {
+class GodsGeneralsContainer extends StatelessWidget {
   // required params
   final String title;
   final String preacher;
   final String url;
   final String description;
   final String thumbnailUrl;
-  const RecentlyBox({
+  const GodsGeneralsContainer({
     Key? key,
     required this.title,
     required this.preacher,
