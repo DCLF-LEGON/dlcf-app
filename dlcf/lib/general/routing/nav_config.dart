@@ -35,6 +35,6 @@ class RouteNames {
 
 class Networks {
   static const String mtn = 'MTN';
-  static const String voda = 'VODA';
-  static const String airteltigo = 'AIRTELTIGO';
+  static const String voda = 'VOD';
+  static const String airteltigo = 'AIR';
 }
