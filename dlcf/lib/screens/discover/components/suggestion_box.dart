@@ -1,4 +1,3 @@
-import 'package:dlcf/assets.dart';
 import 'package:dlcf/general/routing/nav_config.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
